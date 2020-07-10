@@ -46,9 +46,13 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang++ clang-format vim emacs python3 python3-pip idle3 git default-jdk docker quota
+PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk docker quota
 
 apt install $PACKAGES
+apt clean
+apt autoclean
+apt autopurge
+apt autoremove
 
 pip3 install Pillow
 
