@@ -33,8 +33,11 @@ useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK
 usermod -a -G sudo lawtonnichols
 
 # echo -e "linuxpassword\nlinuxpassword" | passwd linuxuser
+echo "Enter password for lawtonnichols"
 passwd lawtonnichols
+echo "Enter password for autograder"
 passwd autograder
+echo "Enter password for test_student"
 passwd test_student
 
 # update the system
