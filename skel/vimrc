@@ -124,6 +124,8 @@ map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 
+map ]b :bnext<cr>
+map [b :bprevious<cr>
 
 """""""" Break indent
 " enable indentation

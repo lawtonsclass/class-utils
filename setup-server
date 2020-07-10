@@ -67,3 +67,9 @@ setquota -u test_student 100M 110M 0 0 /
 quota -vs test_student
 
 echo "Now you should be able to move this folder to your own home folder."
+
+# "You might want to do the following to make your life easier:"
+# "alias g=git"
+# "git config --global alias.co checkout"
+# "git config --global alias.br branch"
+# "git config --global alias.st status"
