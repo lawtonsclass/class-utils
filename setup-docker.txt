@@ -1,0 +1,30 @@
+docker pull ubuntu:20.10
+docker run -it --name autograder_working ubuntu:20.10
+docker start -i autograder_working
+
+apt update
+apt install build-essential git gdb g++ default-jdk vim python3 python3-pip
+pip3 install Pillow
+
+cd ~
+docker cp autograder/ autograder_working:/
+...
+docker cp submission/ autograder_working:/
+...
+docker cp autograder_working:/autograder/results/results.json .
+
+---
+
+timeout 30s
+
+Convert container to image if you'd like to reuse it:
+docker commit autograder_working autograder_template
+
+---
+
+#!/bin/bash
+
+if [ "$(whoami)" != "autograder" ]; then
+  echo "Script must be run as user: autograder"
+  exit 1
+fi
