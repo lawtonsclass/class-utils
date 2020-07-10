@@ -4,3 +4,7 @@ if [ "$(whoami)" != "autograder" ]; then
   echo "Script must be run as user: autograder"
   exit 1
 fi
+
+# ensure that only one copy of the autograder is running
+
+# for each student submission, run autograde-one-submission

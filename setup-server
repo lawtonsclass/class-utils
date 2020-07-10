@@ -25,9 +25,11 @@ getent group teacher || groupadd teacher
 getent group bot || groupadd bot
 getent group student || groupadd student
 
+getent group docker || groupadd docker
+
 # add users {lawtonnichols, autograder, test_student}
 useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawtonnichols
-useradd -m -N -g bot -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder
+useradd -m -N -g bot -G sudo,docker -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder
 useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_student
 
 usermod -a -G sudo lawtonnichols
@@ -46,7 +48,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk docker quota
+PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk docker.io quota
 
 apt install $PACKAGES
 apt clean
@@ -73,7 +75,9 @@ echo "Setting the quota for test_student."
 setquota -u test_student 100M 110M 0 0 /
 quota -vs test_student
 
-echo "Now you should be able to move this folder to your own home folder."
+ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+echo "Now you should be able to move this folder to the root directory."
 
 # "You might want to do the following to make your life easier:"
 # "alias g=git"
