@@ -1,0 +1,212 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" A lot of this file was made using https://github.com/amix/vimrc
+" as a starting point.
+
+filetype plugin indent on    " required
+
+" Set to auto read when a file is changed from the outside
+set autoread
+" au FocusGained,BufEnter * checktime
+" the following is better https://vi.stackexchange.com/questions/14315/how-can-i-tell-if-im-in-the-command-window
+" (also https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim)
+autocmd FocusGained,BufEnter * if mode() !~ '\v(c|r.?|!|t)' && getcmdwintype() == '' | checktime | endif
+" if that's not enough, uncomment the following line:
+"au CursorHold,CursorHoldI * checktime
+
+"Always show current position
+set ruler
+
+" Ignore case when searching
+set ignorecase
+" If you actually want to search case (in)sensitive, use \C (\c)
+
+" When searching try to be smart about cases
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Alternatively instead of the above, toggle highlighting only while searching
+"augroup vimrc-incsearch-highlight
+"  autocmd!
+"  autocmd CmdlineEnter /,\? :set hlsearch
+"  autocmd CmdlineLeave /,\? :set nohlsearch
+"augroup END
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" Enable syntax highlighting
+syntax enable
+
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+
+" Use spaces instead of tabs
+set expandtab
+
+" Be smart when using tabs ;)
+set smarttab
+
+" 1 tab == 2 spaces
+set shiftwidth=2
+set tabstop=2
+
+set ai "Auto indent
+set si "Smart indent
+"set wrap "Wrap lines
+set nowrap
+"set linebreak "Soft wrap
+set number "Line numbers
+
+set hidden "Make it so you can switch buffers after making changes
+           "(but not saving those changes)
+
+
+""""""""""""""""""""""""""""""
+" => Visual mode related
+""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+
+function! VisualSelection(direction, extra_filter) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", "\\/.*'$^~[]")
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'gv'
+        call CmdLine("Ack '" . l:pattern . "' " )
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs, windows and buffers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Smart way to move between windows
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Spell checking
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Pressing <leader>ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
+
+" Shortcuts using <leader>
+map <leader>sn ]s
+map <leader>sp [s
+map <leader>sa zg
+map <leader>s? z=
+
+
+"""""""" Break indent
+" enable indentation
+"set breakindent
+
+" ident by an additional 2 characters on wrapped lines, when line >= 40 characters, put 'showbreak' at start of line
+"set breakindentopt=shift:2,min:40,sbr
+
+" append '>>' to indent
+"set showbreak=>>
+""""""""""""""""""
+
+" No bells
+autocmd! GUIEnter * set vb t_vb=
+
+" toggle highlighting
+:nnoremap <silent><expr> <Leader>h (&hls && v:hlsearch ? ':nohls' : ':set hls')."\n"
+
+set showcmd             " display incomplete commands
+set wildmenu            " display completion matches in a status line
+
+" gq will wrap to textwidth, and wrapping won't happen automatically
+set textwidth=70
+set formatoptions-=t
+
+set backspace=indent,eol,start
+
+" jump to the last place in a file when you open it again
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+endif
+
+" change the working directory to the directory containing the current
+" file
+nnoremap <leader>cd :lcd %:p:h<CR>
+
+" Change windows size with hjklHJKL
+function ResizeWindowWithMovementKeys()
+  let l:msg = "Resize the current window with hjklHJKL. Quit with any other key."
+  echo l:msg
+  let l:hcode = char2nr("h")
+  let l:jcode = char2nr("j")
+  let l:kcode = char2nr("k")
+  let l:lcode = char2nr("l")
+  let l:Hcode = char2nr("H")
+  let l:Jcode = char2nr("J")
+  let l:Kcode = char2nr("K")
+  let l:Lcode = char2nr("L")
+  let l:user_code = getchar()
+  while l:user_code == l:hcode || 
+      \ l:user_code == l:jcode ||
+      \ l:user_code == l:kcode ||
+      \ l:user_code == l:lcode ||
+      \ l:user_code == l:Hcode || 
+      \ l:user_code == l:Jcode ||
+      \ l:user_code == l:Kcode ||
+      \ l:user_code == l:Lcode
+    if l:user_code == l:hcode
+      vertical resize -1
+    elseif l:user_code == l:jcode
+      resize -1
+    elseif l:user_code == l:kcode
+      resize +1
+    elseif l:user_code == l:lcode
+      vertical resize +1
+    elseif l:user_code == l:Hcode
+      vertical resize -4
+    elseif l:user_code == l:Jcode
+      resize -4
+    elseif l:user_code == l:Kcode
+      resize +4
+    elseif l:user_code == l:Lcode
+      vertical resize +4
+    endif
+    redraw!
+    let l:user_code = getchar()
+  endwhile
+  echo ""
+endfunction
+nnoremap <leader>re :call ResizeWindowWithMovementKeys()<CR>
+
+set cursorline
+
+"Open new split panes to right and bottom, which feels more natural than Vim’s default:
+set splitbelow
+set splitright
