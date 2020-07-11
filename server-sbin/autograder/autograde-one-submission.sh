@@ -29,6 +29,8 @@ END
   echo $result
 }
 
+set -v
+
 # get the submission zip file, and unzip it
 rm -rf ~autograder/.autogradertmp
 mkdir ~autograder/.autogradertmp
