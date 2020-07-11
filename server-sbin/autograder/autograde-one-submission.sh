@@ -55,7 +55,7 @@ echo $resultfilename
 echo $user_home_folder
 
 # create a new docker container called "autograder_ephemeral"
-docker container create --name autograder_ephemeral autograder_template
+docker container create -t --name autograder_ephemeral autograder_template
 docker start autograder_ephemeral
 
 # copy the correct autograder into the docker container
