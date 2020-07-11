@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ $UID != 0 ]]; then
+    echo "Please run this script as root"
+    exit 1
+fi
+
+# usage: add-student username "Full Name"
+
+useradd -m -N -g student -s /bin/bash -c "$2" -K UID_MIN=2000 -K UMASK=077 $1
+setquota -u $1 100M 110M 0 0 /

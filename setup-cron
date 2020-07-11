@@ -6,5 +6,11 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
-# autograde every 15 minutes
+echo "run crontab -e while logged in as autograder"
 
+# autograde every 15 minutes
+# try to run a command, but fail immediately if it's already running
+echo "*/15 * * * * flock -n /var/lock/autograder.lock autograde"
+
+# update scripts every hour
+echo "0 * * * * refresh-class-utils"

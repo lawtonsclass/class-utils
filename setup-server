@@ -17,7 +17,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
 # first add files to the /etc/skel directory. .vimrc, Edit default umask
-echo "Before doing this, make sure you've added/edited the necessary files to the /etc/skel directory. E.g., .vimrc, edit the umask to 077 in .profile. Press Enter to continue."
+echo "Before doing this, make sure you've added/edited the necessary files to the /etc/skel directory. E.g., .vimrc, edit the umask to 077 in .bashrc. Press Enter to continue."
 read -n 1
 
 # add {teacher, bot, student} groups
@@ -48,7 +48,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk docker.io quota
+PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk docker.io quota zip unzip
 
 apt install $PACKAGES
 apt clean
@@ -77,7 +77,10 @@ quota -vs test_student
 
 ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
-echo "Now you should be able to move this folder to the root directory."
+echo "Setting the hostname"
+hostnamectl set-hostname lawtonsclass
+
+echo "Move this folder to the root directory if you put it somewhere else."
 
 # "You might want to do the following to make your life easier:"
 # "alias g=git"

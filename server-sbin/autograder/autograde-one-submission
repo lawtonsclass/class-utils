@@ -1,0 +1,74 @@
+#!/bin/bash
+
+if [ "$(whoami)" != "autograder" ]; then
+  echo "Script must be run as user: autograder"
+  exit 1
+fi
+
+function get-assignment-class {
+local result=$(python3 - <<END
+print("$1".split('.')[0].split('-')[0])
+END
+)
+  echo $result
+}
+
+function get-assignment-assignment {
+local result=$(python3 - <<END
+print("$1".split('.')[0].split('-')[1])
+END
+)
+  echo $result
+}
+
+function get-assignment-user {
+local result=$(python3 - <<END
+print("$1".split('.')[0].split('-')[2])
+END
+)
+  echo $result
+}
+
+# get the submission zip file, and unzip it
+rm -rf ~/.autogradertmp
+mkdir ~/.autogradertmp
+unzip "$1" ~/.autogradertmp
+
+# figure out which assignment to grade based on the filename
+class=$(get-assignment-class "$1")
+assignment=$(get-assignment-assignment "$1")
+user=$(get-assignment-user "$1")
+
+resultfilename=$class-$assignment-$user.json
+
+user_home_folder=$(eval echo ~$user)
+
+# create a new docker container called "autograder_ephemeral"
+docker container create --name autograder_ephemeral autograder_template
+docker start autograder_ephemeral
+
+# copy the correct autograder into the docker container
+docker cp ~/autograders/$class/$assignment autograder_ephemeral:~
+
+# copy the autograder library into the docker container
+docker cp ~/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
+
+# copy the code extracted into ~/.autogradertmp into the docker container
+docker cp ~/.autogradertmp autograder_ephemeral:~/$class/$assignment
+docker exec autograder_ephemeral mv ~/$class/$assignment/.autogradertmp ~/$class/$assignment/submission
+
+# run the autograder inside the docker container
+docker exec autograder_ephemeral python3 ~/$class/$assignment/autograder.py
+
+# extract the results.json file from the docker container into a file called $resultfilename
+docker cp autograder_ephemeral:~/$class/$assignment/$resultfilename ~
+
+# delete the docker container
+docker stop autograder_ephemeral
+docker rm --force autograder_ephemeral
+
+# move the results file into the user's home directory, and give them read access
+make-autograder-folder-for-user $user
+chmod 400 $resultfilename
+mv $resultfilename $user_home_folder/.autograder
+chown $user $user_home_folder/.autograder/$resultfilename

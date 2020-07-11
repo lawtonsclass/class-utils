@@ -5,7 +5,7 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
-cd /starter-code
-git pull
-chown -R root:root /starter-code
-chmod -R 744 /starter-code
+user=$1
+user_home_folder=$(eval echo ~$user)
+
+mkdir -p $user_home_folder/.autograder

@@ -5,6 +5,8 @@ if [ "$(whoami)" != "autograder" ]; then
   exit 1
 fi
 
-# ensure that only one copy of the autograder is running
-
 # for each student submission, run autograde-one-submission
+for submission in ~/submissions-to-grade/*.zip; do
+  autograde-one-submission $submission
+  mv $submission ~/submissions-graded
+done
