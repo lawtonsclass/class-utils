@@ -5,6 +5,8 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
+set -v
+
 cd /class-utils
 git pull
 chmod -R 700 /class-utils
@@ -17,9 +19,11 @@ chown -R lawtonnichols:teacher server-sbin/lawtonnichols/*
 chown -R autograder:bot server-sbin/autograder/*
 
 # put special permissions and setuid on /usr/local/bin files
+gcc server-bin/refresh-starter-code.c -o server-bin/refresh-starter-code
 chown root server-bin/refresh-starter-code
 chmod u+s server-bin/refresh-starter-code
 
+gcc server-bin/finish-turnin.c -o server-bin/finish-turnin
 chown root server-bin/finish-turnin
 chmod u+s server-bin/finish-turnin
 
@@ -41,6 +45,7 @@ chown root:bot ~autograder/bin/make-autograder-folder-for-user
 chmod 750 ~autograder/bin/make-autograder-folder-for-user
 chmod u+s ~autograder/bin/make-autograder-folder-for-user
 
+gcc ~lawtonnichols/bin/add-student.c -o ~lawtonnichols/bin/add-student
 chown root:teacher ~lawtonnichols/bin/add-student
 chmod 750 ~lawtonnichols/bin/add-student
 chmod u+s ~lawtonnichols/bin/add-student
