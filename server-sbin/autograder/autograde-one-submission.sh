@@ -89,5 +89,5 @@ fi
 chmod 400 $resultfilename
 # TODO: save only the last 5 submissions
 cp ~autograder/$resultfilename ~autograder/grades
-mv ~autograder/$resultfilename $user_home_folder/.autograder
+mv ~autograder/$resultfilename $user_home_folder/.autograder/
 chown $user $user_home_folder/.autograder/$resultfilename
