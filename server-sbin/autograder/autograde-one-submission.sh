@@ -36,11 +36,13 @@ rm -rf ~autograder/.autogradertmp
 mkdir ~autograder/.autogradertmp
 unzip "$1" -d ~autograder/.autogradertmp
 
+zip_file_basename=$(basename "$1")
+
 # figure out which assignment to grade based on the filename
 submission_date=$(stat -c '%Y' "$1")
-class=$(get-assignment-class "$1")
-assignment=$(get-assignment-assignment "$1")
-user=$(get-assignment-user "$1")
+class=$(get-assignment-class "$zip_file_basename")
+assignment=$(get-assignment-assignment "$zip_file_basename")
+user=$(get-assignment-user "$zip_file_basename")
 resultfilename=$class-$assignment-$user.json
 user_home_folder=$(eval echo ~$user)
 
