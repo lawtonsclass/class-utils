@@ -10,4 +10,4 @@ PATH=/bin:/usr/bin
 cd /starter-code
 git pull
 chown -R root:root /starter-code
-chmod -R 744 /starter-code
+chmod -R 755 /starter-code
