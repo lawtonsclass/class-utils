@@ -59,7 +59,7 @@ docker container create --name autograder_ephemeral autograder_template
 docker start autograder_ephemeral
 
 # copy the correct autograder into the docker container
-docker cp ~autograder/autograders/$class/$assignment autograder_ephemeral:~
+docker cp ~autograder/autograders/$class/$assignment autograder_ephemeral:/root
 
 # copy the autograder library into the docker container (unnecessary)
 # docker cp ~autograder/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
