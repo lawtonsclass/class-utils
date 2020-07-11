@@ -44,6 +44,7 @@ user=$(get-assignment-user "$1")
 resultfilename=$class-$assignment-$user.json
 user_home_folder=$(eval echo ~$user)
 
+echo $@
 echo $submission_date
 echo $class
 echo $assignment
