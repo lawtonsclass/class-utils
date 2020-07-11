@@ -51,7 +51,7 @@ docker start autograder_ephemeral
 docker cp ~/autograders/$class/$assignment autograder_ephemeral:~
 
 # copy the autograder library into the docker container
-docker cp ~/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
+# docker cp ~/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
 
 # copy the code extracted into ~/.autogradertmp into the docker container
 docker cp ~/.autogradertmp autograder_ephemeral:~/$class/$assignment
