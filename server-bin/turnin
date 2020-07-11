@@ -42,5 +42,5 @@ rm -rf ~/.autogradertmp
 mkdir ~/.autogradertmp
 cp $files ~/.autogradertmp
 cd ~/.autogradertmp
-zip $user-$class-$assignment.zip *
-finish-turnin $user-$class-$assignment.zip $class $assignment
+zip $class-$assignment-$user.zip *
+finish-turnin $class-$assignment-$user.zip $class $assignment

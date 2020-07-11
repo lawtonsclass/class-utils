@@ -15,7 +15,7 @@ assignment=$3
 if grep -e "^$assignment@$class$" ~autograder/available-assignments; then
   echo "Copying assignment..."
 else
-  echo "\nError: Assignment $assignment@$class not found. Please double check your spelling, and yell at Lawton if you did everything right."
+  echo -e "\nError: Assignment $assignment@$class not found. Please double check your spelling, and yell at Lawton if you did everything right."
   exit 1
 fi
 
@@ -25,4 +25,4 @@ chown autograder:bot $1
 chmod 600 $1
 mv $1 ~autograder/submissions-to-grade
 
-echo "Submitted successfully."
+echo -e "\nSubmitted successfully."
