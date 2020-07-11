@@ -23,7 +23,6 @@ chown root server-bin/refresh-starter-code
 gcc server-bin/finish-turnin.c -o server-bin/finish-turnin
 chown root server-bin/finish-turnin
 
-
 # put all the files in their proper places
 cp server-bin/* /usr/local/bin
 mkdir -p ~lawtonnichols/bin
@@ -50,6 +49,9 @@ gcc ~lawtonnichols/bin/refresh-class-utils.c -o ~lawtonnichols/bin/refresh-class
 chown root:teacher ~lawtonnichols/bin/refresh-class-utils
 chmod 750 ~lawtonnichols/bin/refresh-class-utils
 chmod u+s ~lawtonnichols/bin/refresh-class-utils
+
+# remove all the unnecessary c files
+rm -f /usr/local/bin/*.c ~lawtonnichols/bin/*.c ~autograder/bin/*.c
 
 # change the owner back so that nobody can see this stuff
 chmod -R 700 /class-utils
