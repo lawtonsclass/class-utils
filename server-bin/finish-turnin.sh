@@ -15,7 +15,7 @@ assignment=$3
 if grep -e "^$assignment@$class$" ~autograder/available-assignments; then
   echo "Copying assignment..."
 else
-  echo "Assignment $assignment@$class not found. Please double check your spelling, and yell at Lawton if you did everything right."
+  echo "\nError: Assignment $assignment@$class not found. Please double check your spelling, and yell at Lawton if you did everything right."
   exit 1
 fi
 
