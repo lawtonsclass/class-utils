@@ -5,8 +5,6 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
-set -v
-
 cd /class-utils
 git pull
 chmod -R 700 /class-utils
