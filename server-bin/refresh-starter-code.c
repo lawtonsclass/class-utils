@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
         0
     };
     setuid(0);
-    execve("/usr/local/bin/refresh-starter-code.sh", argv + 1, envp);
+    execve("/usr/local/bin/refresh-starter-code.sh", argv, envp);
     fprintf(stderr, "Couldn't run program! This shouldn't happen--please yell at Lawton.\n");
     return 1;
 }
