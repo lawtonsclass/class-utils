@@ -45,6 +45,7 @@ chown root:teacher ~lawtonnichols/bin/add-student
 chmod 750 ~lawtonnichols/bin/add-student
 chmod u+s ~lawtonnichols/bin/add-student
 
+gcc ~lawtonnichols/bin/refresh-class-utils.c -o ~lawtonnichols/bin/refresh-class-utils
 chown root:teacher ~lawtonnichols/bin/refresh-class-utils
 chmod 750 ~lawtonnichols/bin/refresh-class-utils
 chmod u+s ~lawtonnichols/bin/refresh-class-utils
