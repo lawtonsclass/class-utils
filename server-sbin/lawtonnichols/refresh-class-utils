@@ -35,7 +35,7 @@ chmod -R 700 ~autograder/bin ~lawtonnichols/bin
 
 # put special permissions and setuid on autograder's and lawtonnichols's files
 chmod u+s ~autograder/bin/autograde
-chmod u+s ~autograder/bin/autograde-once-submission
+chmod u+s ~autograder/bin/autograde-one-submission
 
 chown root:bot ~autograder/bin/make-autograder-folder-for-user
 chmod 750 ~autograder/bin/make-autograder-folder-for-user
