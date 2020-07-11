@@ -80,8 +80,12 @@ ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 echo "Setting the hostname"
 hostnamectl set-hostname lawtonsclass
 
-echo "Now you should run refresh-class-utils.sh, set up docker, and set up cron"
+mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade
+chown -R autograder:bot ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade
+mkdir -p ~lawtonnichols/bin
+chown -R lawtonnichols:teacher ~lawtonnichols/bin
 
+echo "Now you should run refresh-class-utils.sh, set up docker, and set up cron"
 echo "Move this folder to the root directory if you put it somewhere else."
 
 # "You might want to do the following to make your life easier:"

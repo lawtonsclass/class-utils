@@ -85,8 +85,9 @@ if [ -f $user_home_folder/.autograder/$resultfilename ]; then
   # if the user has submitted this assignment before
   mv $user_home_folder/.autograder/$resultfilename $user_home_folder/.autograder/previous_submissions/$(date "+%Y%m%d%H%m")$resultfilename
 fi
-make-autograder-folder-for-user $user
+/home/autograder/bin/make-autograder-folder-for-user $user
 chmod 400 $resultfilename
 # TODO: save only the last 5 submissions
+cp ~autograder/$resultfilename ~autograder/grades
 mv ~autograder/$resultfilename $user_home_folder/.autograder
 chown $user $user_home_folder/.autograder/$resultfilename
