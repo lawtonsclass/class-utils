@@ -61,18 +61,20 @@ docker start autograder_ephemeral
 # copy the correct autograder into the docker container
 docker cp ~autograder/autograders/$class/$assignment autograder_ephemeral:/root
 
+# now the file exists in the /root/$assignment folder
+
 # copy the autograder library into the docker container (unnecessary)
 # docker cp ~autograder/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
 
 # copy the code extracted into ~/.autogradertmp into the docker container
-docker cp ~autograder/.autogradertmp autograder_ephemeral:/root/$class/$assignment
-docker exec autograder_ephemeral mv /root/$class/$assignment/.autogradertmp /root/$class/$assignment/submission
+docker cp ~autograder/.autogradertmp autograder_ephemeral:/root/$assignment
+docker exec autograder_ephemeral mv /root/$assignment/.autogradertmp /root/$assignment/submission
 
 # run the autograder inside the docker container
-docker exec autograder_ephemeral python3 /root/$class/$assignment/autograder.py $class $assignment $user $submission_date
+docker exec autograder_ephemeral python3 /root/$assignment/autograder.py $class $assignment $user $submission_date
 
 # extract the results.json file from the docker container into a file called $resultfilename
-docker cp autograder_ephemeral:/root/$class/$assignment/$resultfilename ~autograder
+docker cp autograder_ephemeral:/root/$assignment/$resultfilename ~autograder
 
 # delete the docker container
 docker stop autograder_ephemeral
