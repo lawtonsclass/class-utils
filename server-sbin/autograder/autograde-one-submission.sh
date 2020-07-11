@@ -41,10 +41,15 @@ submission_date=$(stat -c '%Y' "$1")
 class=$(get-assignment-class "$1")
 assignment=$(get-assignment-assignment "$1")
 user=$(get-assignment-user "$1")
-
 resultfilename=$class-$assignment-$user.json
-
 user_home_folder=$(eval echo ~$user)
+
+echo $submission_date
+echo $class
+echo $assignment
+echo $user
+echo $resultfilename
+echo $user_home_folder
 
 # create a new docker container called "autograder_ephemeral"
 docker container create --name autograder_ephemeral autograder_template
@@ -57,14 +62,14 @@ docker cp ~autograder/autograders/$class/$assignment autograder_ephemeral:~
 # docker cp ~autograder/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
 
 # copy the code extracted into ~/.autogradertmp into the docker container
-docker cp ~autograder/.autogradertmp autograder_ephemeral:~/$class/$assignment
-docker exec autograder_ephemeral mv ~/$class/$assignment/.autogradertmp ~/$class/$assignment/submission
+docker cp ~autograder/.autogradertmp autograder_ephemeral:/root/$class/$assignment
+docker exec autograder_ephemeral mv /root/$class/$assignment/.autogradertmp /root/$class/$assignment/submission
 
 # run the autograder inside the docker container
-docker exec autograder_ephemeral python3 ~/$class/$assignment/autograder.py $class $assignment $user $submission_date
+docker exec autograder_ephemeral python3 /root/$class/$assignment/autograder.py $class $assignment $user $submission_date
 
 # extract the results.json file from the docker container into a file called $resultfilename
-docker cp autograder_ephemeral:~/$class/$assignment/$resultfilename ~autograder
+docker cp autograder_ephemeral:/root/$class/$assignment/$resultfilename ~autograder
 
 # delete the docker container
 docker stop autograder_ephemeral
