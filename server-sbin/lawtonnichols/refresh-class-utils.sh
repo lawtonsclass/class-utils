@@ -45,11 +45,6 @@ chown root:bot ~autograder/bin/make-autograder-folder-for-user
 chmod 750 ~autograder/bin/make-autograder-folder-for-user
 chmod u+s ~autograder/bin/make-autograder-folder-for-user
 
-gcc ~lawtonnichols/bin/add-student.c -o ~lawtonnichols/bin/add-student
-chown root:teacher ~lawtonnichols/bin/add-student
-chmod 750 ~lawtonnichols/bin/add-student
-chmod u+s ~lawtonnichols/bin/add-student
-
 gcc ~lawtonnichols/bin/refresh-class-utils.c -o ~lawtonnichols/bin/refresh-class-utils
 chown root:teacher ~lawtonnichols/bin/refresh-class-utils
 chmod 750 ~lawtonnichols/bin/refresh-class-utils
