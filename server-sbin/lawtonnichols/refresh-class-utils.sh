@@ -6,6 +6,8 @@ if [[ $UID != 0 ]]; then
 fi
 
 cd /class-utils
+git checkout -- .
+git clean -f
 git pull
 chmod -R 700 /class-utils
 chown -R lawtonnichols:teacher /class-utils
@@ -41,9 +43,15 @@ chmod u+s /usr/local/bin/finish-turnin
 # chmod u+s ~autograder/bin/autograde
 # chmod u+s ~autograder/bin/autograde-one-submission
 
+gcc ~autograder/bin/make-autograder-folder-for-user.c -o ~autograder/bin/make-autograder-folder-for-user
 chown root:bot ~autograder/bin/make-autograder-folder-for-user
 chmod 750 ~autograder/bin/make-autograder-folder-for-user
 chmod u+s ~autograder/bin/make-autograder-folder-for-user
+
+gcc ~autograder/bin/autograde-one-submission.c -o ~autograder/bin/autograde-one-submission
+chown root:bot ~autograder/bin/autograde-one-submission
+chmod 750 ~autograder/bin/autograde-one-submission
+chmod u+s ~autograder/bin/autograde-one-submission
 
 gcc ~lawtonnichols/bin/refresh-class-utils.c -o ~lawtonnichols/bin/refresh-class-utils
 chown root:teacher ~lawtonnichols/bin/refresh-class-utils

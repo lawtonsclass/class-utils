@@ -1,4 +1,6 @@
 #!/bin/bash
 
 cd /starter-code
+git checkout -- .
+git clean -f
 git pull

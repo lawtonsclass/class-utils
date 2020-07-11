@@ -8,6 +8,8 @@ fi
 PATH=/bin:/usr/bin
 
 cd /starter-code
+git checkout -- .
+git clean -f
 git pull
 chown -R root:root /starter-code
 chmod -R 755 /starter-code
