@@ -19,9 +19,11 @@ print("Please enter the number of the assignment you want to view:")
 print("(Assignments are sorted with the most recent submissions appearing first)\n")
 
 def getassignment(filename):
+  filename = os.path.basename(filename)
   return filename.split('.')[0].split('-')[1]
 
 def getclass(filename):
+  filename = os.path.basename(filename)
   return filename.split('.')[0].split('-')[0]
 
 if len(scores) == 0:
