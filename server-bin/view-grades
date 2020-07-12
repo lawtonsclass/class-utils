@@ -34,7 +34,18 @@ for i, filename in enumerate(scores):
   modified_date = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
   print("{}: {}@{} (submitted {})".format(i, getassignment(filename), getclass(filename), str(modified_date)))
 
-choice = int(input("Enter your choice: "))
+choice = input("Enter your choice (or 'q' to quit): ")
+if choice == 'q':
+  quit()
+else:
+  try:
+    choice = int(choice)
+    if choice < 0 or choice >= len(scores):
+      print("Invalid index.")
+      quit()
+  except Exception as e:
+    print("Invalid index.")
+    quit()
 
 # save last viewed grades file in last-viewed-grade.txt
 with open(os.path.expanduser('~/last-viewed-grade.txt'), 'w') as f:
@@ -42,7 +53,7 @@ with open(os.path.expanduser('~/last-viewed-grade.txt'), 'w') as f:
 
 print("Press q to stop looking at your score file.")
 
-time.sleep(0.5)
+time.sleep(1.0)
 
 subprocess.run(['less', os.path.expanduser('~/last-viewed-grade.txt')])
 
