@@ -29,7 +29,7 @@ if len(scores) == 0:
   quit()
 
 for i, filename in enumerate(scores):
-  modified_date = datetime.datetime.fromisoformat(os.path.getmtime(filename))
+  modified_date = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
   print("{}: {}@{} (submitted {})".format(i, getassignment(filename), getclass(filename), str(modified_date)))
 
 choice = int(input("Enter your choice: "))
