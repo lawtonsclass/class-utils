@@ -11,6 +11,6 @@ set -v
 for submission in ~autograder/submissions-to-grade/*.zip; do
   # first ensure that we actually have files
   [ -f "$submission" ] || continue
-  /home/autograder/bin/autograde-one-submission $submission &> ~autograder/last-run.log
+  /home/autograder/bin/autograde-one-submission $submission 2>&1 | tee ~autograder/last-run.log
   mv $submission ~autograder/submissions-graded
 done

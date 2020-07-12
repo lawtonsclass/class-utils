@@ -86,8 +86,13 @@ if [ -f $user_home_folder/.autograder/$resultfilename ]; then
   mv $user_home_folder/.autograder/$resultfilename $user_home_folder/.autograder/previous_submissions/$(date "+%Y%m%d%H%m")$resultfilename
 fi
 /home/autograder/bin/make-autograder-folder-for-user $user
-chmod 400 $resultfilename
+chmod 400 ~autograder/$resultfilename
 # TODO: save only the last 5 submissions
 cp ~autograder/$resultfilename ~autograder/grades
 mv ~autograder/$resultfilename $user_home_folder/.autograder/
 chown $user $user_home_folder/.autograder/$resultfilename
+
+if [ -f ~autograder/$resultfilename ]; then
+  echo "$resultfilename didn't get moved! Something went wrong!"
+  rm -f ~autograder/$resultfilename
+fi
