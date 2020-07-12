@@ -24,7 +24,7 @@ def getassignment(filename):
 def getclass(filename):
   return filename.split('.')[0].split('-')[0]
 
-for i, filename in scores.enumerate():
+for i, filename in enumerate(scores):
   modified_date = datetime.datetime.fromisoformat(os.path.getmtime(filename))
   print("{}: {}@{} (submitted {})".format(i, getassignment(filename), getclass(filename), str(modified_date)))
 
