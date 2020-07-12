@@ -29,5 +29,8 @@ for part in score['parts']:
     print()
     print('Score for this part: {}/{}'.format(part['score'], part['points_possible']))
     print('Autograder output for this part:')
-    print('\n'.join(map(lambda x: '  ' + x, part['comments'].split('\n'))))
+    if len(part['comments']) > 0:
+        print('\n'.join(map(lambda x: '  ' + x, part['comments'].split('\n'))))
+    else:
+        print('  <No output>')
     print()

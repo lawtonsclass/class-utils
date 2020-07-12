@@ -7,7 +7,7 @@ home_dir = os.path.abspath(os.path.expanduser('~/.autograder'))
 scores = []
 
 for filename in glob.glob(os.path.join(home_dir, '*.json')):
-  scores += filename
+  scores += [filename]
 
 # sort scores by modified date
 
