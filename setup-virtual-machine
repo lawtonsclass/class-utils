@@ -30,14 +30,13 @@ apt autoclean
 apt autopurge
 apt autoremove
 
-pip3 install Pillow
+pip3 install Pillow pygame
 
 echo "Setting the hostname"
 hostnamectl set-hostname cscivm
 
-chmod -R 755 virtual-machine-bin
-cp virtual-machine-bin/* /usr/local/bin
+echo "Make sure this folder is in /class-utils"
 
-echo "Hide this folder from the students by renaming it to .class-utils or something"
+echo "run refresh-class-utils, and make sure ~/bin is in the PATH"
 
 echo "Remember to add .vimrc, etc."

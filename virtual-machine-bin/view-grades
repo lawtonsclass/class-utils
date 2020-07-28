@@ -1,1 +1,60 @@
+#!/usr/bin/env python3
+
+import glob, os, datetime, subprocess, time
+
+home_dir = os.path.abspath(os.path.expanduser('~/.autograder'))
+
+scores = []
+
+for filename in glob.glob(os.path.join(home_dir, '*.json')):
+  scores += [filename]
+
+# sort scores by modified date
+
+scores.sort(key=lambda filename: os.path.getmtime(filename), reverse=True)
+
+# ask the user which result they want to see
+
+print("Please enter the number of the assignment you want to view:")
+print("(Assignments are sorted with the most recent submissions appearing first)\n")
+
+def getassignment(filename):
+  filename = os.path.basename(filename)
+  return filename.split('.')[0].split('-')[1]
+
+def getclass(filename):
+  filename = os.path.basename(filename)
+  return filename.split('.')[0].split('-')[0]
+
+if len(scores) == 0:
+  print("No scores found. Please yell at Lawton if you know that something should have been graded by now.")
+  quit()
+
+for i, filename in enumerate(scores):
+  modified_date = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
+  print("{}: {}@{} (submitted {})".format(i, getassignment(filename), getclass(filename), str(modified_date)))
+
+choice = input("Enter your choice (or 'q' to quit): ")
+if choice == 'q':
+  quit()
+else:
+  try:
+    choice = int(choice)
+    if choice < 0 or choice >= len(scores):
+      print("Invalid index.")
+      quit()
+  except Exception as e:
+    print("Invalid index.")
+    quit()
+
 # save last viewed grades file in last-viewed-grade.txt
+with open(os.path.expanduser('~/last-viewed-grade.txt'), 'w') as f:
+  subprocess.run(["pretty-print-score", scores[choice]], stdout=f)
+
+print("Press q to stop looking at your score file.")
+
+time.sleep(1.0)
+
+subprocess.run(['less', os.path.expanduser('~/last-viewed-grade.txt')])
+
+print("The score file you just looked at was also copied to ~/last-viewed-grade.txt")

@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+import json, sys
+
+with open(sys.argv[1]) as f:
+    score = json.load(f)
+
+total_score = 0
+total_points_possible = 0
+for part in score['parts']:
+    total_score += part['score']
+    total_points_possible += part['points_possible']
+
+print('Submission Info')
+print('===============')
+print()
+print('User: {}'.format(score['user']))
+print('Class: {}'.format(score['class']))
+print('Assignment: {}'.format(score['assignment']))
+print('Submission Date/Time: {}'.format(score['submited_date']))
+print()
+print('Total Score: {}'.format(total_score))
+print('Total Points Possible: {}'.format(total_points_possible))
+print()
+
+for part in score['parts']:
+    print(part['part'])
+    print('-' * len(part['part']))
+    print()
+    print('Score for this part: {}/{}'.format(part['score'], part['points_possible']))
+    print('Autograder output for this part:')
+    if len(part['comments']) > 0:
+        print('\n'.join(map(lambda x: '  ' + x, part['comments'].split('\n'))))
+    else:
+        print('  <No output>')
+    print()

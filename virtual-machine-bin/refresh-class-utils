@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd /class-utils
+git checkout -- .
+mkdir -p ~/bin
+cp /class-utils/virutal-machine-bin/* ~/bin
+chmod 755 ~/bin/*
