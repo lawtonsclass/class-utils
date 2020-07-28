@@ -22,7 +22,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk quota zip unzip
+PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk quota zip unzip valgrind
 
 apt install $PACKAGES
 apt clean
@@ -32,10 +32,14 @@ apt autoremove
 
 pip3 install Pillow pygame
 
+mv include/* /usr/local/include
+
 echo "Setting the hostname"
 hostnamectl set-hostname cscivm
 
 echo "Make sure this folder is in /class-utils"
+
+echo "Remember to clone the starter code into /starter-code"
 
 echo "run refresh-class-utils, and make sure ~/bin is in the PATH"
 

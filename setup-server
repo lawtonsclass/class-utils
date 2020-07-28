@@ -48,7 +48,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk docker.io quota zip unzip
+PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk docker.io quota zip unzip valgrind
 
 apt install $PACKAGES
 apt clean
@@ -57,6 +57,8 @@ apt autopurge
 apt autoremove
 
 pip3 install Pillow
+
+mv include/* /usr/local/include
 
 # configure quotas
 # https://www.tecmint.com/set-filesystem-disk-quotas-on-ubuntu/
