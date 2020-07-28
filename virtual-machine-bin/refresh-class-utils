@@ -2,6 +2,8 @@
 
 cd /class-utils
 git checkout -- .
+git clean -f
+git pull
 mkdir -p ~/bin
 cp /class-utils/virtual-machine-bin/* ~/bin
 chmod 755 ~/bin/*
