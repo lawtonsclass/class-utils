@@ -1,1 +1,11 @@
 #!/bin/bash
+
+files="${@:2}"
+assignment="$1"
+
+read -p "Enter your server username: " username
+read -s -p "Enter your server password: " password
+echo ""
+sshpass -p "$password" ssh "$username"@server.lawtonsclass.com "rm -rf ~/.sshturnin; mkdir ~/.sshturnin"
+sshpass -p "$password" scp "$files" "$username"@server.lawtonsclass.com:~/.sshturnin
+sshpass -p "$password" ssh "$username"@server.lawtonsclass.com "turnin $assignment ~/.sshturnin/*"

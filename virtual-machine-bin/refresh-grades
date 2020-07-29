@@ -1,7 +1,7 @@
 #!/bin/bash
 
 read -p "Enter your server username: " username
-rsync -rv "$username"@server.lawtonsclass.com:~/.autograder ~
+rsync -rtv "$username"@server.lawtonsclass.com:~/.autograder ~
 echo ""
 echo "Assuming you didn't see any error messages, your grades have been downloaded!"
 echo "Please yell at Lawton if something went wrong."

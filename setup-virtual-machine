@@ -22,7 +22,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk quota zip unzip valgrind
+PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip idle3 git default-jdk quota zip unzip valgrind sshpass
 
 apt install $PACKAGES
 apt clean
@@ -41,6 +41,6 @@ echo "Make sure this folder is in /class-utils"
 
 echo "Remember to clone the starter code into /starter-code"
 
-echo "run refresh-class-utils, and make sure ~/bin is in the PATH"
+echo "run refresh-class-utils"
 
 echo "Remember to add .vimrc, etc."
