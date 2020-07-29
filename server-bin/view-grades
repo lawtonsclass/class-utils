@@ -32,7 +32,7 @@ if len(scores) == 0:
 
 for i, filename in enumerate(scores):
   modified_date = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
-  print("{}: {}@{} (submitted {})".format(i, getassignment(filename), getclass(filename), str(modified_date)))
+  print("{}: {}@{} (graded {})".format(i, getassignment(filename), getclass(filename), str(modified_date)))
 
 choice = input("Enter your choice (or 'q' to quit): ")
 if choice == 'q':
