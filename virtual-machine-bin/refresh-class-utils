@@ -4,5 +4,5 @@ cd /class-utils
 git checkout -- .
 git clean -f
 git pull
-cp /class-utils/virtual-machine-bin/* /usr/loca/bin/
-chmod 755 /usr/loca/bin/*
+cp /class-utils/virtual-machine-bin/* /usr/local/bin/
+chmod 755 /usr/local/bin/*
