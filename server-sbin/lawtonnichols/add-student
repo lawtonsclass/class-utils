@@ -9,4 +9,5 @@ fi
 # todo: add full name
 
 useradd -m -N -g student -s /bin/bash -c "$1" -K UID_MIN=2000 -K UMASK=077 $1
+echo -e "$1\n$1" | passwd $1
 setquota -u $1 100M 110M 0 0 /
