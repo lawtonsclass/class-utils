@@ -5,7 +5,8 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
-# usage: add-student username "Full Name"
+# usage: add-student username
+# todo: add full name
 
-useradd -m -N -g student -s /bin/bash -c "$2" -K UID_MIN=2000 -K UMASK=077 $1
+useradd -m -N -g student -s /bin/bash -c "$1" -K UID_MIN=2000 -K UMASK=077 $1
 setquota -u $1 100M 110M 0 0 /
