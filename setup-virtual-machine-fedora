@@ -1,0 +1,52 @@
+#!/bin/bash
+
+if [[ $UID != 0 ]]; then
+    echo "Please run this script with sudo:"
+    echo "sudo $0 $*"
+    exit 1
+fi
+
+# update the system
+
+dnf update
+dnf upgrade
+
+# make shared folders work
+
+usermod -a -G vboxsf csci
+
+# install required packages
+
+dnf group install "C Development Tools and Libraries"
+dnf install make cmake git gcc-g++ gdb vim neovim emacs clang python3 nodejs java-latest-openjdk zip unzip valgrind sshpass zsh
+
+# remove the package cache
+dnf clean packages
+dnf autoremove
+
+mv include/* /usr/local/include
+
+echo "Setting the hostname"
+hostnamectl set-hostname cscivm
+
+echo "Change the shell to zsh"
+chsh csci
+
+echo "Make sure this folder is in /class-utils"
+
+echo "Remember to clone the starter code into /starter-code"
+
+echo "run refresh-class-utils"
+
+echo "Remember to add .vimrc, etc."
+
+echo "Remember to install racket and install the links in /usr/local"
+
+echo "Remember to install VS Code (and C++, Prettier, and Bracket Pair Colorizer plugins!): https://code.visualstudio.com/docs/setup/linux"
+
+echo "Install oh my zsh using:"
+echo 'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+
+echo "Remember to disable the screensaver"
+
+echo "Remember to shrink the filesystem before you zip it"

@@ -2,7 +2,17 @@
 
 read -p "Enter your server username: " username
 rsync -rtv "$username"@server.lawtonsclass.com:~/.autograder ~
+
+mkdir -p ~/.autograder_html
+
+for grade in ~/.autograder/*.json; do
+    filename=$(basename -- "$grade")
+    extension="${filename##*.}"
+    filename="${filename%.*}"
+    generate-html-score $grade > ~/.autograder_html/$(filename).html
+done
+
 echo ""
 echo "Assuming you didn't see any error messages, your grades have been downloaded!"
 echo "Please yell at Lawton if something went wrong."
-echo "Run view-grades to see if anything changed."
+echo "Run view-grades-html / view-grades to see if anything changed."

@@ -17,7 +17,11 @@ print()
 print('User: {}'.format(score['user']))
 print('Class: {}'.format(score['class']))
 print('Assignment: {}'.format(score['assignment']))
-print('Submission Date/Time: {}'.format(score['submited_date']))
+# curse my typos
+if 'submitted_date' in score:
+    print('Submission Date/Time: {}'.format(score['submitted_date']))
+else:
+    print('Submission Date/Time: {}'.format(score['submited_date']))
 print()
 print('Total Score: {}'.format(total_score))
 print('Total Points Possible: {}'.format(total_points_possible))

@@ -27,20 +27,18 @@ getent group student || groupadd student
 
 getent group docker || groupadd docker
 
-# add users {lawtonnichols, autograder, test_student}
+# add users {lawtonnichols, autograder, test_08675309}
 useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawtonnichols
 useradd -m -N -g bot -G sudo,docker -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder
-useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_student
-
-usermod -a -G sudo lawtonnichols
+useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_08675309
 
 # echo -e "linuxpassword\nlinuxpassword" | passwd linuxuser
 echo "Enter password for lawtonnichols"
 passwd lawtonnichols
 echo "Enter password for autograder"
 passwd autograder
-echo "Enter password for test_student"
-passwd test_student
+echo "Enter password for test_08675309"
+passwd test_08675309
 
 # update the system
 apt update
@@ -48,7 +46,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip python3-pygame idle3 git default-jdk docker.io quota zip unzip valgrind sshpass
+PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 git default-jdk docker.io quota zip unzip valgrind sshpass
 
 apt install $PACKAGES
 apt clean
@@ -56,7 +54,7 @@ apt autoclean
 apt autopurge
 apt autoremove
 
-pip3 install Pillow
+systemctl enable docker
 
 mv include/* /usr/local/include
 
@@ -73,9 +71,9 @@ mount -o remount /
 quotacheck -cum /
 quotaon /
 
-echo "Setting the quota for test_student."
-setquota -u test_student 100M 110M 0 0 /
-quota -vs test_student
+echo "Setting the quota for test_08675309."
+setquota -u test_08675309 100M 110M 0 0 /
+quota -vs test_08675309
 
 ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
@@ -88,6 +86,7 @@ mkdir -p ~lawtonnichols/bin
 chown -R lawtonnichols:teacher ~lawtonnichols/bin
 
 echo "Now you should run refresh-class-utils.sh, set up docker, and set up cron"
+echo "Also set up the autograder account--clone the autograders repo, add the available-assignments file, add the grades, submissions-graded, and submissions-to-grade folders"
 echo "Move this folder to the root directory if you put it somewhere else."
 
 # "You might want to do the following to make your life easier:"
