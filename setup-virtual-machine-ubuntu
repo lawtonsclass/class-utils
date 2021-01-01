@@ -43,4 +43,5 @@ echo "Remember to clone the starter code into /starter-code"
 
 echo "run refresh-class-utils"
 
-echo "Remember to add .vimrc, etc."
+echo "Adding vimrc"
+cp skel/vimrc ~/.vimrc

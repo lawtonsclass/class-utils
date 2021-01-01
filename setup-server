@@ -90,9 +90,11 @@ echo "Now you should run refresh-class-utils.sh, set up docker, and set up cron"
 echo "Also set up the autograder account--clone the autograders repo, add the available-assignments file"
 echo "Move this folder to the root directory if you put it somewhere else."
 
-# "You might want to do the following to make your life easier:"
-# "alias g=git"
-# "git config --global alias.co checkout"
-# "git config --global alias.br branch"
-# "git config --global alias.st status"
-# "git config --global alias.c commit"
+echo "You might want to alias g=git to make your life easier."
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.st status
+git config --global alias.c commit
+git config --global pull.rebase false
+
+echo "Add your public key to authorized_keys"
