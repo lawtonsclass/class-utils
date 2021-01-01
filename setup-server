@@ -56,7 +56,7 @@ apt autoremove
 
 systemctl enable docker
 
-mv include/* /usr/local/include
+cp include/* /usr/local/include
 
 # configure quotas
 # https://www.tecmint.com/set-filesystem-disk-quotas-on-ubuntu/
@@ -81,12 +81,13 @@ echo "Setting the hostname"
 hostnamectl set-hostname lawtonsclass
 
 mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade
-chown -R autograder:bot ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade
+touch ~autograder/available-assignments
+chown -R autograder:bot ~autograder
 mkdir -p ~lawtonnichols/bin
 chown -R lawtonnichols:teacher ~lawtonnichols/bin
 
 echo "Now you should run refresh-class-utils.sh, set up docker, and set up cron"
-echo "Also set up the autograder account--clone the autograders repo, add the available-assignments file, add the grades, submissions-graded, and submissions-to-grade folders"
+echo "Also set up the autograder account--clone the autograders repo, add the available-assignments file"
 echo "Move this folder to the root directory if you put it somewhere else."
 
 # "You might want to do the following to make your life easier:"
