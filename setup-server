@@ -46,7 +46,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 git default-jdk docker.io quota zip unzip valgrind sshpass
+PACKAGES="build-essential make gcc g++ gdb clang clang-format vim emacs python3 git default-jdk docker.io quota zip unzip valgrind sshpass"
 
 apt install $PACKAGES
 apt clean
