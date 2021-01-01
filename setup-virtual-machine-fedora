@@ -29,8 +29,8 @@ mv include/* /usr/local/include
 echo "Setting the hostname"
 hostnamectl set-hostname cscivm
 
-echo "Change the shell to zsh"
-chsh csci
+echo "Adding vimrc"
+cp skel/vimrc ~/.vimrc
 
 echo "Make sure this folder is in /class-utils"
 
@@ -38,7 +38,6 @@ echo "Remember to clone the starter code into /starter-code"
 
 echo "run refresh-class-utils"
 
-echo "Remember to add .vimrc, etc."
 
 echo "Remember to install racket and install the links in /usr/local"
 
