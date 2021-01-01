@@ -22,7 +22,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES=build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip python3-pygame python3-tk idle3 git default-jdk quota zip unzip valgrind sshpass
+PACKAGES="build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip python3-pygame python3-tk idle3 git default-jdk quota zip unzip valgrind sshpass"
 
 apt install $PACKAGES
 apt clean
