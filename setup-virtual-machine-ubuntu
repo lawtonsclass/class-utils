@@ -22,8 +22,9 @@ apt upgrade
 
 # install required packages
 
-PACKAGES="build-essential make gcc g++ gdb clang clang-format vim emacs python3 python3-pip python3-pygame python3-tk idle3 git default-jdk quota zip unzip valgrind sshpass"
+PACKAGES="build-essential make cmake gcc g++ gdb clang clangd clang-format vim neovim emacs python3 python3-pip git default-jdk quota zip unzip valgrind sshpass nodejs curl zsh"
 
+apt-get purge libreoffice* gimp*
 apt install $PACKAGES
 apt clean
 apt autoclean
@@ -34,14 +35,22 @@ apt autoremove
 
 mv include/* /usr/local/include
 
-echo "Setting the hostname"
-hostnamectl set-hostname cscivm
+echo "Adding vimrc"
+cp skel/vimrc ~/.vimrc
 
 echo "Make sure this folder is in /class-utils"
 
-echo "Remember to clone the starter code into /starter-code"
+echo "Remember to clone the starter code via https into /starter-code"
 
 echo "run refresh-class-utils"
 
-echo "Adding vimrc"
-cp skel/vimrc ~/.vimrc
+echo "Remember to install racket and install the links in /usr/local"
+
+echo "Remember to install VS Code (and C++, Prettier, and Bracket Pair Colorizer plugins!): https://code.visualstudio.com/docs/setup/linux"
+
+echo "Install oh my zsh using:"
+echo 'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+
+echo "Remember to turn off screen saver"
+
+echo "Remember to shrink the filesystem before you zip it"
