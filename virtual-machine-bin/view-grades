@@ -4,7 +4,7 @@ import subprocess, os
 
 grades_dir = os.path.abspath(os.path.expanduser('~/.autograder_html'))
 
-if not os.path.isdir(grades_dir):
+if not os.path.isdir(grades_dir) or os.path.isdir(grades_dir) and len(os.listdir(grades_dir)):
     print("There are no grades yet. Did you run refresh-grades? Did you wait long enough?")
     quit()
 
