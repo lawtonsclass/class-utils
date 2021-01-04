@@ -9,7 +9,8 @@ for grade in ~/.autograder/*.json; do
     filename=$(basename -- "$grade")
     extension="${filename##*.}"
     filename="${filename%.*}"
-    generate-html-score $grade > "~/.autograder_html/$filename.html"
+    filename_to_save_to=~/.autograder_html/"$filename".html
+    generate-html-score "$grade" > "$filename_to_save_to"
 done
 
 echo ""
