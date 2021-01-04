@@ -3,7 +3,8 @@ docker run -it --name autograder_working ubuntu:20.10
 docker start -i autograder_working
 
 apt update
-apt install build-essential g++ git gdb g++ vim python3 valgrind
+ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+apt install build-essential g++ git gdb g++ vim python3 valgrind tzdata
 
 cd ~
 docker cp autograder/ autograder_working:/
@@ -19,6 +20,8 @@ timeout 30s
 Convert container to image if you'd like to reuse it:
 docker commit autograder_working autograder_template
 You need to call it autograder_template
+
+If you ever overwrite autograder_template, use docker images and docker image rm to get rid of the old one
 
 ---
 

@@ -3,6 +3,7 @@
 read -p "Enter your server username: " username
 rsync -rtv "$username"@server.lawtonsclass.com:~/.autograder ~
 
+rm -rf ~/.autograder_html
 mkdir -p ~/.autograder_html
 
 for grade in ~/.autograder/*.json; do
