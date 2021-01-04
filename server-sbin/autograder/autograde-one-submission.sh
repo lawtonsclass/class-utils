@@ -88,10 +88,10 @@ if [ -f $user_home_folder/.autograder/$resultfilename ]; then
 fi
 chmod 400 ~autograder/$resultfilename
 # TODO: save only the last 5 submissions
-cp ~autograder/$resultfilename ~autograder/grades
+cp ~autograder/$resultfilename ~autograder/grades/
 mv ~autograder/$resultfilename $user_home_folder/.autograder/
 chown $user $user_home_folder/.autograder/$resultfilename
-chown -R autograder:bot ~autograder/grades
+chown -R autograder:bot ~autograder/grades/
 
 if [ -f ~autograder/$resultfilename ]; then
   echo "$resultfilename didn't get moved! Something went wrong!"

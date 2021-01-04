@@ -80,7 +80,7 @@ ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 echo "Setting the hostname"
 hostnamectl set-hostname lawtonsclass
 
-mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade
+mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade ~autograder/grades
 touch ~autograder/available-assignments
 chown -R autograder:bot ~autograder
 mkdir -p ~lawtonnichols/bin
