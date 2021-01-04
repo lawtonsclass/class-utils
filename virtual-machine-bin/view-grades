@@ -5,7 +5,7 @@ import subprocess, os
 grades_dir = os.path.abspath(os.path.expanduser('~/.autograder_html'))
 
 if not os.path.isdir(grades_dir) or os.path.isdir(grades_dir) and len(os.listdir(grades_dir)) == 0:
-    print("There are no grades yet. Did you run refresh-grades? Did you wait long enough?")
+    print("There are no grades yet.\nDid you run refresh-grades?\nDid you wait long enough before running refresh-grades?")
     quit()
 
 subprocess.Popen(["firefox", grades_dir])
