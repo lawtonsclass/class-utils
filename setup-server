@@ -27,14 +27,14 @@ getent group student || groupadd student
 
 getent group docker || groupadd docker
 
-# add users {lawtonnichols, autograder, test_08675309}
-useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawtonnichols
+# add users {lawt, autograder, test_08675309}
+useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawt
 useradd -m -N -g bot -G sudo,docker -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder
 useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_08675309
 
 # echo -e "linuxpassword\nlinuxpassword" | passwd linuxuser
-echo "Enter password for lawtonnichols"
-passwd lawtonnichols
+echo "Enter password for lawt"
+passwd lawt
 echo "Enter password for autograder"
 passwd autograder
 echo "Enter password for test_08675309"
@@ -46,7 +46,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES="build-essential make gcc g++ gdb clang clang-format vim emacs python3 git default-jdk docker.io quota zip unzip valgrind sshpass"
+PACKAGES="build-essential make gcc g++ gdb clang clang-format vim emacs python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep"
 
 apt install $PACKAGES
 apt clean
@@ -83,8 +83,8 @@ hostnamectl set-hostname lawtonsclass
 mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade ~autograder/grades
 touch ~autograder/available-assignments
 chown -R autograder:bot ~autograder
-mkdir -p ~lawtonnichols/bin
-chown -R lawtonnichols:teacher ~lawtonnichols/bin
+mkdir -p ~lawt/bin
+chown -R lawt:teacher ~lawt/bin
 
 echo "Now you should run refresh-class-utils.sh, set up docker, and set up cron"
 echo "Also set up the autograder account--clone the autograders repo, add the available-assignments file"

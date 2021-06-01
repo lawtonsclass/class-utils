@@ -22,7 +22,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES="build-essential make cmake gcc g++ gdb clang clangd clang-format vim neovim emacs python3 python3-pip git default-jdk quota zip unzip valgrind sshpass nodejs curl zsh"
+PACKAGES="build-essential make cmake gcc g++ gdb clang clangd clang-format vim neovim emacs python3 python3-pip git default-jdk quota zip unzip valgrind sshpass nodejs curl zsh ripgrep"
 
 apt-get purge libreoffice* gimp*
 apt install $PACKAGES

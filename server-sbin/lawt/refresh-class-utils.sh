@@ -5,17 +5,17 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
-cd /class-utils
+cd ~lawt/class-utils
 git checkout -- .
 git clean -f
 git pull
-chmod -R 700 /class-utils
-chown -R lawtonnichols:teacher /class-utils
+chmod -R 700 ~lawt/class-utils
+chown -R lawt:teacher ~lawt/class-utils
 
 # put the proper default permissions on everything
 chmod -R 700 server-sbin
 chmod -R 755 server-bin
-chown -R lawtonnichols:teacher server-sbin/lawtonnichols/*
+chown -R lawt:teacher server-sbin/lawt/*
 chown -R autograder:bot server-sbin/autograder/*
 
 # put special permissions on /usr/local/bin files
@@ -27,19 +27,19 @@ chown root server-bin/finish-turnin
 
 # put all the files in their proper places
 cp server-bin/* /usr/local/bin
-mkdir -p ~lawtonnichols/bin
+mkdir -p ~lawt/bin
 mkdir -p ~autograder/bin
 cp server-sbin/autograder/* ~autograder/bin
-cp server-sbin/lawtonnichols/* ~lawtonnichols/bin
+cp server-sbin/lawt/* ~lawt/bin
 chown -R autograder:bot ~autograder/bin
-chown -R lawtonnichols:teacher ~lawtonnichols/bin
-chmod -R 700 ~autograder/bin ~lawtonnichols/bin
+chown -R lawt:teacher ~lawt/bin
+chmod -R 700 ~autograder/bin ~lawt/bin
 
 # setuid for /usr/local/bin files because copying destroys them
 chmod u+s /usr/local/bin/refresh-starter-code
 chmod u+s /usr/local/bin/finish-turnin
 
-# put special permissions and setuid on autograder's and lawtonnichols's files
+# put special permissions and setuid on autograder's and lawt's files
 # chmod u+s ~autograder/bin/autograde
 # chmod u+s ~autograder/bin/autograde-one-submission
 
@@ -53,14 +53,18 @@ chown root:bot ~autograder/bin/autograde-one-submission
 chmod 750 ~autograder/bin/autograde-one-submission
 chmod u+s ~autograder/bin/autograde-one-submission
 
-gcc ~lawtonnichols/bin/refresh-class-utils.c -o ~lawtonnichols/bin/refresh-class-utils
-chown root:teacher ~lawtonnichols/bin/refresh-class-utils
-chmod 750 ~lawtonnichols/bin/refresh-class-utils
-chmod u+s ~lawtonnichols/bin/refresh-class-utils
+gcc ~lawt/bin/refresh-class-utils.c -o ~lawt/bin/refresh-class-utils
+chown root:teacher ~lawt/bin/refresh-class-utils
+chmod 750 ~lawt/bin/refresh-class-utils
+chmod u+s ~lawt/bin/refresh-class-utils
+
+chown root:teacher ~lawt/bin/add-student
+chmod 750 ~lawt/bin/add-student
+chmod u+s ~lawt/bin/add-student
 
 # remove all the unnecessary c files
-rm -f /usr/local/bin/*.c ~lawtonnichols/bin/*.c ~autograder/bin/*.c
+rm -f /usr/local/bin/*.c ~lawt/bin/*.c ~autograder/bin/*.c
 
 # change the owner back so that nobody can see this stuff
-chmod -R 700 /class-utils
-chown -R lawtonnichols:teacher /class-utils
+chmod -R 700 ~lawt/class-utils
+chown -R lawt:teacher ~lawt/class-utils
