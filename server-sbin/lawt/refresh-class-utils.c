@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
         0
     };
     setuid(0);
-    execve("/home/lawtonnichols/bin/refresh-class-utils.sh", argv, envp);
+    execve("/home/lawt/bin/refresh-class-utils.sh", argv, envp);
     fprintf(stderr, "Couldn't run program! This shouldn't happen--please yell at Lawton.\n");
     return 1;
 }
