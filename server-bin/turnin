@@ -43,4 +43,4 @@ mkdir ~/.autogradertmp
 cp $files ~/.autogradertmp
 cd ~/.autogradertmp
 zip $class-$assignment-$user.zip *
-finish-turnin $class-$assignment-$user.zip $class $assignment
+finish-turnin $class-$assignment-$user.zip $class $assignment $user

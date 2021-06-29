@@ -9,6 +9,7 @@ PATH=/bin:/usr/bin
 
 class=$2
 assignment=$3
+user=$4
 
 # confirm that the assignment is available
 
@@ -26,3 +27,13 @@ chmod 600 $1
 mv $1 ~autograder/submissions-to-grade
 
 echo -e "\nSubmitted successfully."
+
+~autograder/bin/make-autograder-folder-for-user $user
+
+echo "" > ~"$user"/.autograder/log
+chown "$user":student ~"$user"/.autograder/log
+chmod 400 ~"$user"/.autograder/log
+
+echo -e "\nWaiting for the autograder to become available."
+echo -e "(Press Ctrl-C to close this submission window at any time--\n  your submission will still be graded.)"
+sudo -u $user bash -c 'tail -f ~/.autograder/log' 

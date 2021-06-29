@@ -7,10 +7,20 @@ fi
 
 set -v
 
-# for each student submission, run autograde-one-submission
-for submission in ~autograder/submissions-to-grade/*.zip; do
-  # first ensure that we actually have files
-  [ -f "$submission" ] || continue
-  /home/autograder/bin/autograde-one-submission $submission 2>&1 | tee ~autograder/last-run.log
-  mv $submission ~autograder/submissions-graded
+cwd=$(pwd)
+
+inotifywait -mr \
+  --timefmt '%m/%d/%y %H:%M' --format '%T %w %f' \
+  -e close_write ~autograder/submissions-to-grade |
+while read -r date time dir file; do
+       changed_abs=${dir}${file}
+       changed_rel=${changed_abs#"$cwd"/}
+
+       echo "$date ${time}: $changed_abs"
+       submission=$changed_abs
+
+       # grade the submission
+       /home/autograder/bin/autograde-one-submission $submission 2>&1 | tee ~autograder/last-run.log
+
+       mv $submission ~autograder/submissions-graded
 done

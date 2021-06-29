@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "$(whoami)" != "autograder" ]; then
+  echo "Script must be run as user: autograder"
+  exit 1
+fi
+
+set -v
+
+# for each student submission, run autograde-one-submission
+for submission in ~autograder/submissions-to-grade/*.zip; do
+  # first ensure that we actually have files
+  [ -f "$submission" ] || continue
+  /home/autograder/bin/autograde-one-submission $submission 2>&1 | tee ~autograder/last-run.log
+  mv $submission ~autograder/submissions-graded
+done

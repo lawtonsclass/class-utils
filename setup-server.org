@@ -27,6 +27,22 @@ passwd test_08675309
 
 ** Add public key to ~/.ssh/authorized_keys
 
+* Update the system
+
+apt update
+apt upgrade
+
+* Install required packages
+
+
+apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep
+apt clean
+apt autoclean
+apt autopurge
+apt autoremove
+
+systemctl enable docker
+
 * Copy skel folder's files into the /etc/skel directory
 
 * Add files to /etc/profile.d
@@ -45,22 +61,6 @@ sudo apt install cowsay lolcat
 export TERM=xterm-256color
 /usr/games/cowsay Welcome to the class server! | /usr/games/lolcat
 #+end_src
-
-* Update the system
-
-apt update
-apt upgrade
-
-* Install required packages
-
-
-apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep
-apt clean
-apt autoclean
-apt autopurge
-apt autoremove
-
-systemctl enable docker
 
 * Configure quotas
 
@@ -96,7 +96,7 @@ chown -R autograder:bot ~autograder
 mkdir -p ~lawt/bin
 chown -R lawt:teacher ~lawt/bin
 
-* Set up cron
+* Set up cron (no longer necessary)
 
 run
 crontab -e
@@ -110,7 +110,53 @@ echo "*/10 * * * * flock -n /var/lock/autograder.lock /home/autograder/bin/autog
 
 * Clone the autograders repo in ~autograder
 
-* Set up docker (if necessary)
+* Set up docker
+
+** Create autograder_working as a template
+
+docker pull ubuntu:latest
+docker run -it --name autograder_working ubuntu:latest
+docker start -i autograder_working
+
+apt update
+apt install build-essential gcc g++ git gdb vim python3 valgrind tzdata
+ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+*** If apt update doesn't work on raspberry pi
+
+https://askubuntu.com/questions/1263284/apt-update-throws-signature-error-in-ubuntu-20-04-container-on-arm
+install on HOST, not container:
+https://packages.debian.org/sid/libseccomp2
+wget latest_libseccomp2
+sudo dpkg -i libseccomp2_2.4.3-1+b1_armhf.deb
+
+install latest docker:
+sudo apt remove docker docker-engine docker.io containerd runc
+sudo apt autoremove
+follow https://docs.docker.com/engine/install/debian/
+you have to use the convenience script
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh ./get-docker.sh
+
+** Convert autograder_working container to a reusable image called autograder_template
+
+docker commit autograder_working autograder_template
+
+If you ever overwrite autograder_template, use docker images and
+docker image rm to get rid of the old one
+
+** Testing autograder_template
+
+docker run --rm -it autograder_template
+
+** Manually getting stuff off docker
+
+cd ~
+docker cp autograder/ autograder_working:/
+...
+docker cp submission/ autograder_working:/
+...
+docker cp autograder_working:/autograder/results/results.json .
 
 * Git aliases
 
@@ -123,7 +169,9 @@ git config --global alias.c commit
 
 * Run refresh-class-utils.sh
 
-* Make sure a bash script runs as root
+* Bash script snippets
+
+** Make sure a bash script runs as root
 
 #+begin_src bash
 #/bin/bash
@@ -135,7 +183,7 @@ if [[ $UID != 0 ]]; then
 fi
 #+end_src
 
-* Make sure a bash script runs using its containing directory as the cwd
+** Make sure a bash script runs using its containing directory as the cwd
 
 #+begin_src bash
 # make sure we're in the directory containing the other scripts

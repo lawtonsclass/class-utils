@@ -54,8 +54,6 @@ echo $user
 echo $resultfilename
 echo $user_home_folder
 
-echo "Submission grading started." >> "$user_home_folder"/.autograder/log
-
 # create a new docker container called "autograder_ephemeral"
 docker container create -t --name autograder_ephemeral autograder_template
 docker start autograder_ephemeral
@@ -99,15 +97,3 @@ if [ -f ~autograder/$resultfilename ]; then
   echo "$resultfilename didn't get moved! Something went wrong!"
   rm -f ~autograder/$resultfilename
 fi
-
-echo "Submission grading finished. You are now able to use \"view-grades\" and see your score on the terminal." >> "$user_home_folder"/.autograder/log
-
-echo "Uploading grade to the class website." >> "$user_home_folder"/.autograder/log
-
-# upload grade to class website in user folder
-ssh lawt@www.lawtonsclass.com "mkdir -p ~/grades/$user"
-scp ~autograder/$resultfilename lawt@www.lawtonsclass.com:~/grades/$user
-
-echo "Done." >> "$user_home_folder"/.autograder/log
-echo "Autograding is complete. Please press Ctrl-C to close this submission program." >> "$user_home_folder"/.autograder/log
-
