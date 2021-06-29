@@ -1,0 +1,150 @@
+#+TITLE: Server Setup
+
+* Make suure class-utils is in ~lawt
+
+* Add groups
+
+# add {teacher, bot, student} groups
+getent group teacher || groupadd teacher
+getent group bot || groupadd bot
+getent group student || groupadd student
+
+getent group docker || groupadd docker
+
+* Add initial users
+
+# add users {lawt, autograder, test_08675309}
+useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawt
+useradd -m -N -g bot -G sudo,docker -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder
+useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_08675309
+
+echo "Enter password for lawt"
+passwd lawt
+echo "Enter password for autograder"
+passwd autograder
+echo "Enter password for test_08675309"
+passwd test_08675309
+
+** Add public key to ~/.ssh/authorized_keys
+
+* Copy skel folder's files into the /etc/skel directory
+
+* Add files to /etc/profile.d
+
+** umask.sh
+
+#+begin_src bash
+umask 077
+#+end_src
+
+** welcome.sh
+
+sudo apt install cowsay lolcat
+
+#+begin_src bash
+export TERM=xterm-256color
+/usr/games/cowsay Welcome to the class server! | /usr/games/lolcat
+#+end_src
+
+* Update the system
+
+apt update
+apt upgrade
+
+* Install required packages
+
+
+apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep
+apt clean
+apt autoclean
+apt autopurge
+apt autoremove
+
+systemctl enable docker
+
+* Configure quotas
+
+# https://www.tecmint.com/set-filesystem-disk-quotas-on-ubuntu/
+# https://www.digitalocean.com/community/tutorials/how-to-enable-user-and-group-quotas
+
+** Edit /etc/fstab
+
+Add ",usrquota"
+
+mount -o remount /
+quotacheck -cum /
+quotaon /
+
+** Set the quota for test_08675309
+
+setquota -u test_08675309 100M 110M 0 0 /
+quota -vs test_08675309
+
+* Set the timezone
+
+ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+* Set the hostname
+
+hostnamectl set-hostname lawtonsclass
+
+* Make required folders and files
+
+mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade ~autograder/grades
+touch ~autograder/available-assignments
+chown -R autograder:bot ~autograder
+mkdir -p ~lawt/bin
+chown -R lawt:teacher ~lawt/bin
+
+* Set up cron
+
+run
+crontab -e
+while logged in as autograder and add:
+#+begin_src
+# autograde every 10 minutes
+# try to run a command, but fail immediately if it's already running
+echo "Add the following line:"
+echo "*/10 * * * * flock -n /var/lock/autograder.lock /home/autograder/bin/autograde"
+#+end_src
+
+* Clone the autograders repo in ~autograder
+
+* Set up docker (if necessary)
+
+* Git aliases
+
+~alias g=git~ in .zshrc
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.st status
+git config --global alias.c commit
+
+* Run refresh-class-utils.sh
+
+* Make sure a bash script runs as root
+
+#+begin_src bash
+#/bin/bash
+
+if [[ $UID != 0 ]]; then
+    echo "Please run this script with sudo:"
+    echo "sudo $0 $*"
+    exit 1
+fi
+#+end_src
+
+* Make sure a bash script runs using its containing directory as the cwd
+
+#+begin_src bash
+# make sure we're in the directory containing the other scripts
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+cd $DIR
+#+end_src

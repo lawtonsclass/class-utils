@@ -1,7 +1,0 @@
-echo "Directions:"
-echo "run crontab -e while logged in as autograder"
-
-# autograde every 10 minutes
-# try to run a command, but fail immediately if it's already running
-echo "Add the following line:"
-echo "*/10 * * * * flock -n /var/lock/autograder.lock /home/autograder/bin/autograde"
