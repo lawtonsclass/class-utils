@@ -46,7 +46,7 @@ apt upgrade
 
 # install required packages
 
-PACKAGES="build-essential make gcc g++ gdb clang clang-format vim emacs python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep"
+PACKAGES="build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep"
 
 apt install $PACKAGES
 apt clean
@@ -88,13 +88,14 @@ chown -R lawt:teacher ~lawt/bin
 
 echo "Now you should run refresh-class-utils.sh, set up docker, and set up cron"
 echo "Also set up the autograder account--clone the autograders repo, add the available-assignments file"
-echo "Move this folder to the root directory if you put it somewhere else."
+echo "Move this folder to lawt's ~ if you put it somewhere else."
 
 echo "You might want to alias g=git to make your life easier."
 git config --global alias.co checkout
 git config --global alias.br branch
 git config --global alias.st status
 git config --global alias.c commit
-git config --global pull.rebase false
 
 echo "Add your public key to authorized_keys"
+
+echo "Add default umask to profile.d"
