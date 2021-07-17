@@ -50,6 +50,10 @@ apt install neovim
 
 * Copy skel folder's files into the /etc/skel directory
 
+sudo cp -r config /etc/skel/.config
+sudo cp vimrc /etc/skel/.vimrc
+you'll need to chmod them after they're there though
+
 * Add files to /etc/profile.d
 
 ** umask.sh
@@ -135,6 +139,8 @@ echo "*/10 * * * * flock -n /var/lock/autograder.lock /home/autograder/bin/autog
 * Clone the autograders repo in ~autograder
 
 * Clone the starter code in /
+
+clone it in ~lawt, and then move it to / with sudo
 
 * Remove all permissions to things in ~autograder and ~lawt
 
