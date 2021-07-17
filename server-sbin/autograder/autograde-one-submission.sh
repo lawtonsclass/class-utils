@@ -105,8 +105,8 @@ echo "Submission grading finished. You are now able to use \"view-grades\" and s
 echo "Uploading grade to the class website." >> "$user_home_folder"/.autograder/log
 
 # upload grade to class website in user folder
-ssh lawt@www.lawtonsclass.com "mkdir -p ~/grades/$user"
-scp ~autograder/$resultfilename lawt@www.lawtonsclass.com:~/grades/$user
+ssh lawt@www.lawtonsclass.com "mkdir -p ~/class_website/grades/$user"
+scp ~autograder/$resultfilename lawt@www.lawtonsclass.com:~/class_website/grades/$user
 
 echo "Done." >> "$user_home_folder"/.autograder/log
 echo "Autograding is complete. Please press Ctrl-C to close this submission program." >> "$user_home_folder"/.autograder/log

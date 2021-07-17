@@ -1,0 +1,84 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 assignment@class"
+  exit 1
+fi
+
+# get the name of the class
+function get-class {
+local result=$(python3 - <<END
+print("$1".split('@')[1])
+END
+)
+  echo $result
+}
+
+# get the name of the assignment
+function get-assignment {
+local result=$(python3 - <<END
+print("$1".split('@')[0])
+END
+)
+  echo $result
+}
+
+class=$(get-class "$1")
+assignment=$(get-assignment "$1")
+
+path_to_starter_code="/starter-code"
+if [ ! -d "$path_to_starter_code" ]
+then
+  path_to_starter_code="$HOME/WindowsDesktop/starter-code"
+fi
+
+path="$path_to_starter_code/$class/$assignment"
+
+# ensure that /starter-code/$class/$assignment exists
+if [ ! -d "$path" ] 
+then
+    echo "Can't find assignment $assignment in $class. Did you forget a 0 or an @?" 
+    echo "Please yell at Lawton if this should have worked."
+    exit 1
+fi
+
+if [ -d "./$assignment" ]; then
+  echo "You already have a $assignment directory here."
+  read -p "Do you want to overwrite it? (y/n) " 
+  echo    # (optional) move to a new line
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Assignment copy cancelled."
+    exit 1
+  fi
+fi
+
+cp -r $path .
+cd "./$assignment"
+
+get_uid_string () {
+python3 - << EOF
+import subprocess
+
+try:
+  uid = subprocess.check_output("id -u", shell=True)
+  uid = int(uid)
+except:
+  uid = 0
+uid_string = '{0:b}'.format(uid)
+uid_string = uid_string.replace("0", " ")
+uid_string = uid_string.replace("1", " ")
+uid_string = "  " + uid_string + "  "
+print(uid_string)
+
+EOF
+}
+
+uid_string="$(get_uid_string)"
+
+shopt -s nullglob # this prevents a non-matching glob from evaluating to itself
+
+for f in *.h *.c *.cpp *.s; do
+  sed -i -E "s|(// .*)$|\1$uid_string|" $f
+done
+
+echo "Assignment copied into the $assignment directory."

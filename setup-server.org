@@ -5,11 +5,11 @@
 * Add groups
 
 # add {teacher, bot, student} groups
-getent group teacher || groupadd teacher
-getent group bot || groupadd bot
-getent group student || groupadd student
+getent group teacher || groupadd teacher;
+getent group bot || groupadd bot;
+getent group student || groupadd student;
 
-getent group docker || groupadd docker
+getent group docker || groupadd docker;
 
 * Add initial users
 
@@ -34,14 +34,19 @@ apt upgrade
 
 * Install required packages
 
-
 apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep
-apt clean
-apt autoclean
-apt autopurge
-apt autoremove
+apt autoremove;
+apt clean;
+apt autoclean;
+apt autopurge;
 
 systemctl enable docker
+
+** neovim ppa
+
+add-apt-repository ppa:neovim-ppa/stable
+apt update
+apt install neovim
 
 * Copy skel folder's files into the /etc/skel directory
 
@@ -62,6 +67,14 @@ export TERM=xterm-256color
 /usr/games/cowsay Welcome to the class server! | /usr/games/lolcat
 #+end_src
 
+** do the same in zsh
+
+sudo vim /etc/zsh/zprofile, and add:
+#+begin_src bash
+. /etc/profile.d/welcome.sh
+. /etc/profile.d/umask.sh
+#+end_src
+
 * Configure quotas
 
 # https://www.tecmint.com/set-filesystem-disk-quotas-on-ubuntu/
@@ -75,6 +88,15 @@ mount -o remount /
 quotacheck -cum /
 quotaon /
 
+** if this doesn't work, you need the generic kernel
+
+apt search linux-image | grep installed
+apt search linux-headers | grep installed
+you want to get rid of any oracle specific stuff
+a generic one should already be installed (if not install
+linux-image-generic and linux-headers-generic)
+reboot and see if it works this time
+
 ** Set the quota for test_08675309
 
 setquota -u test_08675309 100M 110M 0 0 /
@@ -86,15 +108,17 @@ ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 * Set the hostname
 
-hostnamectl set-hostname lawtonsclass
+hostnamectl set-hostname class-server
 
 * Make required folders and files
 
-mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade ~autograder/grades
-touch ~autograder/available-assignments
-chown -R autograder:bot ~autograder
-mkdir -p ~lawt/bin
-chown -R lawt:teacher ~lawt/bin
+mkdir -p ~autograder/bin ~autograder/submissions-graded ~autograder/submissions-to-grade ~autograder/grades;
+touch ~autograder/available-assignments;
+chown -R autograder:bot ~autograder;
+mkdir -p ~lawt/bin;
+chown -R lawt:teacher ~lawt/bin;
+
+** Add ~/bin to PATH in and autograder's .bashrc and lawt's .zshrc
 
 * Set up cron (no longer necessary)
 
@@ -110,9 +134,19 @@ echo "*/10 * * * * flock -n /var/lock/autograder.lock /home/autograder/bin/autog
 
 * Clone the autograders repo in ~autograder
 
+* Clone the starter code in /
+
+* Remove all permissions to things in ~autograder and ~lawt
+
+cd ~
+chmod -R g= * .
+chmod -R o= * .
+
 * Set up docker
 
 ** Create autograder_working as a template
+
+log in as autograder
 
 docker pull ubuntu:latest
 docker run -it --name autograder_working ubuntu:latest
@@ -157,6 +191,8 @@ docker cp autograder/ autograder_working:/
 docker cp submission/ autograder_working:/
 ...
 docker cp autograder_working:/autograder/results/results.json .
+
+* systemd service to run the autograder
 
 * Git aliases
 
