@@ -217,10 +217,24 @@ User=autograder
 WantedBy=multi-user.target
 #+end_src
 
+** Add ssh authorized key to lawt@www.lawtonsclass.com
+
+see oracle-cloud.org
+
+** configure the autograder
+
+Run it manually first, so that you can make sure it's connecting
+properly. You might need to type "yes", etc.
+
 sudo systemctl enable --now autograder
 
 to view error output:
 sudo journalctl --unit=autograder
+
+** to re-autograde things
+
+just move them to themselves:
+mv submission.zip submission.zip
 
 * Git aliases
 
