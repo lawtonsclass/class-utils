@@ -34,7 +34,7 @@ apt upgrade
 
 * Install required packages
 
-apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep
+apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep inotify-tools
 apt autoremove;
 apt clean;
 apt autoclean;
@@ -207,14 +207,20 @@ Description=Autograder
 
 [Service]
 Type=simple
-ExecStart=/home/autograder/bin/autograder
+ExecStart=/home/autograder/bin/autograde
 Restart=on-failure
+RestartSec=5
 PIDFile=/tmp/autograder.pid
 User=autograder
 
 [Install]
 WantedBy=multi-user.target
 #+end_src
+
+sudo systemctl enable --now autograder
+
+to view error output:
+sudo journalctl --unit=autograder
 
 * Git aliases
 

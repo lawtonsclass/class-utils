@@ -30,9 +30,9 @@ echo -e "\nSubmitted successfully."
 
 ~autograder/bin/make-autograder-folder-for-user $user
 
-echo "" > ~"$user"/.autograder/log
-chown "$user":student ~"$user"/.autograder/log
-chmod 400 ~"$user"/.autograder/log
+echo "" > /home/"$user"/.autograder/log
+chown "$user":student /home/"$user"/.autograder/log
+chmod 400 /home/"$user"/.autograder/log
 
 echo -e "\nWaiting for the autograder to become available."
 echo -e "(Press Ctrl-C to close this submission window at any time--\n  your submission will still be graded.)"
