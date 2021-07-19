@@ -93,7 +93,7 @@ chmod 400 ~autograder/$resultfilename
 cp ~autograder/$resultfilename ~autograder/grades/
 mv ~autograder/$resultfilename $user_home_folder/.autograder/
 chown $user $user_home_folder/.autograder/$resultfilename
-chown -R autograder:bot ~autograder/grades/
+chown autograder:bot ~autograder/grades/$resultfilename
 
 if [ -f ~autograder/$resultfilename ]; then
   echo "$resultfilename didn't get moved! Something went wrong!"
@@ -106,7 +106,7 @@ echo "Uploading grade to the class website." >> "$user_home_folder"/.autograder/
 
 # upload grade to class website in user folder
 ssh lawt@www.lawtonsclass.com "mkdir -p ~/class_website/grades/$user"
-scp ~autograder/$resultfilename lawt@www.lawtonsclass.com:~/class_website/grades/$user
+scp ~autograder/grades/$resultfilename lawt@www.lawtonsclass.com:~/class_website/grades/$user
 
 echo "Done." >> "$user_home_folder"/.autograder/log
 echo "Autograding is complete. Please press Ctrl-C to close this submission program." >> "$user_home_folder"/.autograder/log

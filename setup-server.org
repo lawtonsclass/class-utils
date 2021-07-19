@@ -200,6 +200,22 @@ docker cp autograder_working:/autograder/results/results.json .
 
 * systemd service to run the autograder
 
+sudo vim /etc/systemd/system/autograder.service
+#+begin_src systemd
+[Unit]
+Description=Autograder
+
+[Service]
+Type=simple
+ExecStart=/home/autograder/bin/autograder
+Restart=on-failure
+PIDFile=/tmp/autograder.pid
+User=autograder
+
+[Install]
+WantedBy=multi-user.target
+#+end_src
+
 * Git aliases
 
 ~alias g=git~ in .zshrc
