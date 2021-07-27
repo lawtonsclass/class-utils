@@ -106,9 +106,9 @@ echo "Uploading grade to the class website." >> "$user_home_folder"/.autograder/
 
 # upload grade to class website in user folder
 chmod u+w ~autograder/grades/$resultfilename
-ssh -i ~autograder/.ssh/id_rsa lawt@www.lawtonsclass.com "mkdir -p /home/lawt/class_website/grades/$user" || \
+ssh -i ~autograder/.ssh/autograder_key lawt@www.lawtonsclass.com "mkdir -p /home/lawt/class_website/grades/$user" || \
   echo "Error connecting to the class website. Please tell Lawton about this." >> "$user_home_folder"/.autograder/log
-scp -i ~autograder/.ssh/id_rsa ~autograder/grades/$resultfilename lawt@www.lawtonsclass.com:/home/lawt/class_website/grades/$user || \
+scp -i ~autograder/.ssh/autograder_key ~autograder/grades/$resultfilename lawt@www.lawtonsclass.com:/home/lawt/class_website/grades/$user || \
   echo "Error uploading grade. Please tell Lawton about this." >> "$user_home_folder"/.autograder/log
 chmod u-w ~autograder/grades/$resultfilename
 
