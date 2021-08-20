@@ -14,33 +14,34 @@ getent group docker || groupadd docker;
 * Add initial users
 
 # add users {lawt, autograder, test_08675309}
-useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawt
-useradd -m -N -g bot -G sudo,docker -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder
-useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_08675309
+useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawt;
+useradd -m -N -g bot -G sudo,docker -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder;
+useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_08675309;
 
-echo "Enter password for lawt"
-passwd lawt
-echo "Enter password for autograder"
-passwd autograder
-echo "Enter password for test_08675309"
-passwd test_08675309
+passwd lawt;
+passwd autograder;
+passwd test_08675309;
 
-** Add public key to ~/.ssh/authorized_keys
+** Add public key to ~/.ssh/authorized_keys for lawt and autograder
+
+** Disallow root login via ssh after you're sure you can login as someone else
+
+sudo nano /etc/ssh/sshd_config
 
 * Update the system
 
-apt update
-apt upgrade
+apt update;
+apt upgrade;
 
 * Install required packages
 
-apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep inotify-tools
+apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep inotify-tools fail2ban zsh;
 apt autoremove;
 apt clean;
 apt autoclean;
 apt autopurge;
 
-systemctl enable docker
+systemctl enable --now docker;
 
 ** neovim ppa
 
@@ -48,11 +49,9 @@ add-apt-repository ppa:neovim-ppa/stable
 apt update
 apt install neovim
 
-* Copy skel folder's files into the /etc/skel directory
+** install oh my zsh for lawt
 
-sudo cp -r config /etc/skel/.config
-sudo cp vimrc /etc/skel/.vimrc
-you'll need to chmod them after they're there though
+add the .zshrc from virtual-machine.org
 
 * Add files to /etc/profile.d
 
@@ -79,6 +78,27 @@ sudo vim /etc/zsh/zprofile, and add:
 . /etc/profile.d/umask.sh
 #+end_src
 
+log out and log back in so that the umask takes effect
+
+* Clone class-utils via https and copy skel folder's files into the /etc/skel directory
+
+sudo cp -r config /etc/skel/.config
+sudo cp vimrc /etc/skel/.vimrc
+you'll need to chmod them after they're there though
+
+sudo chmod 644 .vimrc
+sudo chmod -R 755 .config
+
+** add skel stuff to lawt, autograder, and test_08675309
+
+sudo -s
+cp -r .vimrc .config ~lawt
+cp -r .vimrc .config ~autograder
+cp -r .vimrc .config ~test_08675309
+chown -R lawt:teacher ~lawt
+chown -R autograder:bot ~autograder
+chown -R test_08675309:student ~test_08675309
+
 * Configure quotas
 
 # https://www.tecmint.com/set-filesystem-disk-quotas-on-ubuntu/
@@ -86,13 +106,14 @@ sudo vim /etc/zsh/zprofile, and add:
 
 ** Edit /etc/fstab
 
-Add ",usrquota"
+Add ",usrquota" to the options
 
 mount -o remount /
 quotacheck -cum /
+  ^ this one might take a while; just wait
 quotaon /
 
-** if this doesn't work, you need the generic kernel
+** (oracle cloud) if this doesn't work, you need the generic kernel
 
 apt search linux-image | grep installed
 apt search linux-headers | grep installed
@@ -138,15 +159,9 @@ echo "*/10 * * * * flock -n /var/lock/autograder.lock /home/autograder/bin/autog
 
 * Clone the autograders repo in ~autograder
 
-* Clone the starter code in /
+* Clone the starter code in / via https
 
 clone it in ~lawt, and then move it to / with sudo
-
-* Remove all permissions to things in ~autograder and ~lawt
-
-cd ~
-chmod -R g= * .
-chmod -R o= * .
 
 * Set up docker
 
@@ -156,11 +171,11 @@ log in as autograder
 
 docker pull ubuntu:latest
 docker run -it --name autograder_working ubuntu:latest
-docker start -i autograder_working
+use ~docker start -i autograder_working~ to come back to it
 
 apt update
 apt install build-essential gcc g++ git gdb vim python3 valgrind tzdata
-ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+if you didn't get a prompt, use: ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 *** If apt update doesn't work on raspberry pi
 
@@ -198,6 +213,18 @@ docker cp submission/ autograder_working:/
 ...
 docker cp autograder_working:/autograder/results/results.json .
 
+* Run refresh-class-utils.sh
+
+* Run refresh-starter-code to fix the permissions
+
+* Remove all permissions to things in ~autograder and ~lawt
+
+cd ~
+sudo chmod -R o= * .
+
+shouldn't need this one because the groups are different, but if you ever do:
+sudo chmod -R g= * .
+
 * systemd service to run the autograder
 
 sudo vim /etc/systemd/system/autograder.service
@@ -219,7 +246,7 @@ WantedBy=multi-user.target
 
 ** Add ssh authorized key to lawt@www.lawtonsclass.com
 
-see oracle-cloud.org
+see class-website-vps.org
 
 ** configure the autograder
 
@@ -240,12 +267,13 @@ mv submission.zip submission.zip
 
 ~alias g=git~ in .zshrc
 
-git config --global alias.co checkout
-git config --global alias.br branch
-git config --global alias.st status
-git config --global alias.c commit
+git config --global user.email "lawtonnichols@gmail.com";
+git config --global user.name "Lawton Nichols";
 
-* Run refresh-class-utils.sh
+git config --global alias.co checkout;
+git config --global alias.br branch;
+git config --global alias.st status;
+git config --global alias.c commit;
 
 * Bash script snippets
 

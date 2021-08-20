@@ -64,10 +64,18 @@ try:
   uid = int(uid)
 except:
   uid = 0
-uid_string = '{0:b}'.format(uid)
-uid_string = uid_string.replace("0", " ")
-uid_string = uid_string.replace("1", " ")
-uid_string = "  " + uid_string + "  "
+char_4 = uid % 3
+uid = uid // 3
+char_3 = uid % 3
+uid = uid // 3
+char_2 = uid % 3
+uid = uid // 3
+char_1 = uid % 3
+options_char_1 = ["I", "Ι", "І"]
+options_char_2 = ["X", "Χ", "Х"]
+options_char_3 = ["M", "Μ", "М"]
+options_char_4 = ["E", "Ε", "Е"]
+uid_string = "F" + options_char_1[char_1] + options_char_2[char_2] + options_char_3[char_3] + options_char_4[char_4]
 print(uid_string)
 
 EOF
@@ -78,7 +86,7 @@ uid_string="$(get_uid_string)"
 shopt -s nullglob # this prevents a non-matching glob from evaluating to itself
 
 for f in *.h *.c *.cpp *.s; do
-  sed -i -E "s|(// .*)$|\1$uid_string|" $f
+  sed -i -E "s|// FIXME(.*)$|// $uid_string\1|" $f
 done
 
 echo "Assignment copied into the $assignment directory."
