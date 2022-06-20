@@ -59,6 +59,7 @@ echo "Submission grading started." >> "$user_home_folder"/.autograder/log
 # create a new docker container called "autograder_ephemeral"
 docker container create -t --name autograder_ephemeral autograder_template
 docker start autograder_ephemeral
+docker update --cpus="1.0" autograder_ephemeral
 
 # copy the correct autograder into the docker container
 docker cp ~autograder/autograders/$class/$assignment autograder_ephemeral:/root
