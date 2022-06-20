@@ -1,6 +1,6 @@
 #+TITLE: Server Setup
 
-* Make sure class-utils is in ~lawt
+* Make sure class-utils is in ~lawt (and cloned by https)
 
 * Add groups
 
