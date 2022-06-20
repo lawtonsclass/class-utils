@@ -107,12 +107,12 @@ sudo chmod -R 755 .config
 ** add skel stuff to lawt, autograder, and test_08675309
 
 sudo -s
-cp -r .vimrc .config ~lawt
-cp -r .vimrc .config ~autograder
-cp -r .vimrc .config ~test_08675309
-chown -R lawt:teacher ~lawt
-chown -R autograder:bot ~autograder
-chown -R test_08675309:student ~test_08675309
+cp -r .vimrc .config ~lawt;
+cp -r .vimrc .config ~autograder;
+cp -r .vimrc .config ~test_08675309;
+chown -R lawt:teacher ~lawt;
+chown -R autograder:bot ~autograder;
+chown -R test_08675309:student ~test_08675309;
 
 * Configure quotas
 

@@ -67,4 +67,4 @@ rm -f /usr/local/bin/*.c ~lawt/bin/*.c ~autograder/bin/*.c
 
 # change the owner back so that nobody can see this stuff
 chmod -R 700 ~lawt/class-utils
-chown -R lawt:teacher ~lawt/class-utils
+chown -R root:root ~lawt/class-utils
