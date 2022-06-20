@@ -95,7 +95,7 @@ sudo vim /etc/zsh/zprofile, and add:
 
 log out and log back in so that the umask takes effect
 
-* Clone class-utils via https and copy skel folder's files into the /etc/skel directory
+* copy skel folder's files into the /etc/skel directory
 
 sudo cp -r config /etc/skel/.config
 sudo cp vimrc /etc/skel/.vimrc
