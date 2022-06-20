@@ -1,6 +1,6 @@
 #+TITLE: Server Setup
 
-* Make suure class-utils is in ~lawt
+* Make sure class-utils is in ~lawt
 
 * Add groups
 
@@ -35,7 +35,9 @@ apt upgrade;
 
 * Install required packages
 
-apt install build-essential make gcc g++ gdb clang clang-format vim python3 git default-jdk docker.io quota zip unzip valgrind sshpass ripgrep inotify-tools fail2ban zsh;
+apt install build-essential make gcc g++ gdb clang clang-format vim \
+python3 git default-jdk docker.io quota zip unzip valgrind sshpass  \
+ripgrep inotify-tools fail2ban sl zsh;
 apt autoremove;
 apt clean;
 apt autoclean;
@@ -52,6 +54,15 @@ apt install neovim
 ** install oh my zsh for lawt
 
 add the .zshrc from virtual-machine.org
+
+** fail2ban exclude SCCCD ip range
+
+sudo vim /etc/fail2ban/jail.conf
+
+under the [DEFAULT section, add]:
+ignoreip = ... 209.129.240.0/22
+
+sudo service fail2ban restart
 
 * Add files to /etc/profile.d
 
@@ -70,6 +81,8 @@ export TERM=xterm-256color
 /usr/games/cowsay Welcome to the class server! | /usr/games/lolcat
 #+end_src
 
+get rid of the absolute paths on void linux
+
 ** do the same in zsh
 
 sudo vim /etc/zsh/zprofile, and add:
@@ -77,6 +90,8 @@ sudo vim /etc/zsh/zprofile, and add:
 . /etc/profile.d/welcome.sh
 . /etc/profile.d/umask.sh
 #+end_src
+
+^ this isn't necessary on void linux
 
 log out and log back in so that the umask takes effect
 
@@ -170,6 +185,7 @@ clone it in ~lawt, and then move it to / with sudo
 log in as autograder
 
 docker pull ubuntu:latest
+(on void you might have to run this twice for it to work)
 docker run -it --name autograder_working ubuntu:latest
 use ~docker start -i autograder_working~ to come back to it
 
