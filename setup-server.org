@@ -37,7 +37,7 @@ apt upgrade;
 
 apt install build-essential make gcc g++ gdb clang clang-format vim \
 python3 git default-jdk docker.io quota zip unzip valgrind sshpass  \
-ripgrep inotify-tools fail2ban sl zsh;
+ripgrep inotify-tools fail2ban sl zsh cowsay lolcat;
 apt autoremove;
 apt clean;
 apt autoclean;
@@ -47,9 +47,9 @@ systemctl enable --now docker;
 
 ** neovim ppa
 
-add-apt-repository ppa:neovim-ppa/stable
-apt update
-apt install neovim
+add-apt-repository ppa:neovim-ppa/stable;
+apt update;
+apt install neovim;
 
 ** install oh my zsh for lawt
 
@@ -73,8 +73,6 @@ umask 077
 #+end_src
 
 ** welcome.sh
-
-sudo apt install cowsay lolcat
 
 #+begin_src bash
 export TERM=xterm-256color
@@ -190,7 +188,7 @@ docker run -it --name autograder_working ubuntu:latest
 use ~docker start -i autograder_working~ to come back to it
 
 apt update
-apt install build-essential gcc g++ git gdb vim python3 valgrind tzdata
+apt install build-essential gcc g++ git vim python3 valgrind tzdata
 if you didn't get a prompt, use: ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 *** If apt update doesn't work on raspberry pi
