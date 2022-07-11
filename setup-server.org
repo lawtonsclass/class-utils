@@ -26,7 +26,7 @@ passwd test_08675309;
 
 ** Disallow root login via ssh after you're sure you can login as someone else
 
-sudo nano /etc/ssh/sshd_config
+sudo vim /etc/ssh/sshd_config
 
 * Update the system
 
@@ -95,16 +95,15 @@ log out and log back in so that the umask takes effect
 
 * copy skel folder's files into the /etc/skel directory
 
-sudo cp -r config /etc/skel/.config
-sudo cp vimrc /etc/skel/.vimrc
-you'll need to chmod them after they're there though
-
-sudo chmod 644 .vimrc
-sudo chmod -R 755 .config
+sudo cp -r config /etc/skel/.config;
+sudo cp vimrc /etc/skel/.vimrc;
+sudo chmod 644 /etc/skel/.vimrc;
+sudo chmod -R 755 /etc/skel/.config;
 
 ** add skel stuff to lawt, autograder, and test_08675309
 
 sudo -s
+cd /etc/skel
 cp -r .vimrc .config ~lawt;
 cp -r .vimrc .config ~autograder;
 cp -r .vimrc .config ~test_08675309;
@@ -158,6 +157,9 @@ chown -R lawt:teacher ~lawt/bin;
 
 ** Add ~/bin to PATH in and autograder's .bashrc and lawt's .zshrc
 
+echo 'export PATH=$PATH:~/bin' >> ~lawt/.zshrc
+echo 'export PATH=$PATH:~/bin' >> ~autograder/.bashrc
+
 * Set up cron (no longer necessary)
 
 run
@@ -189,6 +191,7 @@ use ~docker start -i autograder_working~ to come back to it
 
 apt update
 apt install build-essential gcc g++ git vim python3 valgrind tzdata
+apt clean
 if you didn't get a prompt, use: ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 *** If apt update doesn't work on raspberry pi
@@ -229,7 +232,16 @@ docker cp autograder_working:/autograder/results/results.json .
 
 * Run refresh-class-utils.sh
 
-* Run refresh-starter-code to fix the permissions
+chmod a+x refresh-class-utils.sh
+sudo ./refresh-class-utils.sh
+it'll fail, but now the directory is owned by root
+sudo -s
+./refresh-class-utils.sh
+and this time it'll work
+
+from now on you can just run refresh-class-utils as lawt
+
+* Run refresh-starter-code twice to fix the permissions
 
 * Remove all permissions to things in ~autograder and ~lawt
 
@@ -279,11 +291,10 @@ mv submission.zip submission.zip
 
 * Git aliases
 
-~alias g=git~ in .zshrc
-
 git config --global user.email "lawtonnichols@gmail.com";
 git config --global user.name "Lawton Nichols";
 
+(unnecessary with oh-my-zsh)
 git config --global alias.co checkout;
 git config --global alias.br branch;
 git config --global alias.st status;

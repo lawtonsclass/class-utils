@@ -65,6 +65,11 @@ chmod u+s ~lawt/bin/add-student
 # remove all the unnecessary c files
 rm -f /usr/local/bin/*.c ~lawt/bin/*.c ~autograder/bin/*.c
 
+# include the graphics library
+cp include/graphics /usr/local/include
+chown root:teacher /usr/local/include/graphics
+chmod 664 /usr/local/include/graphics
+
 # change the owner back so that nobody can see this stuff
 chmod -R 700 ~lawt/class-utils
 chown -R root:root ~lawt/class-utils
