@@ -112,12 +112,29 @@ struct termios orig_termios;
 void hideCursor() { printf("\e[?25l"); }
 void showCursor() { printf("\e[?25h"); }
 
+void setDefaultForeground() {
+  printf("\033[39m");
+}
+
+void setDefaultBackground() {
+  printf("\033[49m");
+}
+
+void let_me_cout_really_quick() {
+  setDefaultForeground();
+  setDefaultBackground();
+}
+
 void disableRawMode() {
+  setDefaultForeground();
+  setDefaultBackground();
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
   showCursor();
 }
 
 void disableRawModeAndExit(int x) {
+  setDefaultForeground();
+  setDefaultBackground();
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
   showCursor();
   exit(0);
@@ -234,19 +251,6 @@ void init_graphics(int num_columns, int num_rows, double time_between_draws) {
 
 int get_rows() { return rows; }
 int get_cols() { return cols; }
-
-void setDefaultForeground() {
-  printf("\033[39m");
-}
-
-void setDefaultBackground() {
-  printf("\033[49m");
-}
-
-void let_me_cout_really_quick() {
-  setDefaultForeground();
-  setDefaultBackground();
-}
 
 void setForeground(Color c) {
   printf("\033[38;2;%d;%d;%dm", c.r, c.g, c.b);
