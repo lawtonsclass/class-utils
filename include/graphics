@@ -6,8 +6,8 @@
 #include <string>
 
 // ALWAYS CALL THIS BEFORE CALLING ANY OTHER FUNCTION IN THE LIBRARY
-void init_graphics(int num_columns = 48, 
-                   int num_rows = 48,
+void init_graphics(int num_columns = 42,
+                   int num_rows = 42,
                    double time_between_draws = 0.05);
 
 // Automatically set the number of rows and columns in the image to be
@@ -28,7 +28,7 @@ int get_cols();
 // Valid row numbers are from 0 to get_rows()-1
 // Valid column numbers are from 0 to get_cols()-1
 // ---
-// The pixel (0, 0) is the top left, and 
+// The pixel (0, 0) is the top left, and
 // the pixel (get_rows()-1, get_cols()-1) is the bottom right.
 // ---
 // Colors can be the following words: "black", "white", "red", "orange", ..., "purple"
@@ -56,7 +56,7 @@ void toggle_automatic_redrawing();
 void draw_screen();
 
 // Returns a string indicating which key the user has pressed, or the
-// empty string if no key has been pressed since the last call. 
+// empty string if no key has been pressed since the last call.
 // Sample return values: "", "a", "b", ..., "z", "Up", "Down", "Left", "Right"
 std::string get_keypress();
 
@@ -105,70 +105,68 @@ std::string get_keypress();
 #include <unordered_map>
 #include <vector>
 
-using namespace std;
+inline struct termios GRAPHICS_orig_termios;
 
-struct termios orig_termios;
+inline void GRAPHICS_hideCursor() { printf("\e[?25l"); }
+inline void GRAPHICS_showCursor() { printf("\e[?25h"); }
 
-void hideCursor() { printf("\e[?25l"); }
-void showCursor() { printf("\e[?25h"); }
-
-void setDefaultForeground() {
+inline void GRAPHICS_setDefaultForeground() {
   printf("\033[39m");
 }
 
-void setDefaultBackground() {
+inline void GRAPHICS_setDefaultBackground() {
   printf("\033[49m");
 }
 
-void let_me_cout_really_quick() {
-  setDefaultForeground();
-  setDefaultBackground();
+inline void let_me_cout_really_quick() {
+  GRAPHICS_setDefaultForeground();
+  GRAPHICS_setDefaultBackground();
 }
 
-void disableRawMode() {
-  setDefaultForeground();
-  setDefaultBackground();
-  tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
-  showCursor();
+inline void GRAPHICS_disableRawMode() {
+  GRAPHICS_setDefaultForeground();
+  GRAPHICS_setDefaultBackground();
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &GRAPHICS_orig_termios);
+  GRAPHICS_showCursor();
 }
 
-void disableRawModeAndExit(int x) {
-  setDefaultForeground();
-  setDefaultBackground();
-  tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
-  showCursor();
+inline void GRAPHICS_disableRawModeAndExit(int x) {
+  GRAPHICS_setDefaultForeground();
+  GRAPHICS_setDefaultBackground();
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &GRAPHICS_orig_termios);
+  GRAPHICS_showCursor();
   exit(0);
 }
 
-void enableRawMode() {
+inline void GRAPHICS_enableRawMode() {
   // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
   // setvbuf(stdin, NULL, _IONBF, 0);
 
-  tcgetattr(STDIN_FILENO, &orig_termios);
-  atexit(disableRawMode);
-  signal(SIGINT, disableRawModeAndExit);
-  struct termios raw = orig_termios;
+  tcgetattr(STDIN_FILENO, &GRAPHICS_orig_termios);
+  atexit(GRAPHICS_disableRawMode);
+  signal(SIGINT, GRAPHICS_disableRawModeAndExit);
+  struct termios raw = GRAPHICS_orig_termios;
   raw.c_lflag &= ~(ECHO | ICANON);
   raw.c_cc[VMIN] = 0;
   // raw.c_cc[VTIME] = 0;
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 
-  hideCursor();
+  GRAPHICS_hideCursor();
 }
 
-void die(const char *s) {
+inline void GRAPHICS_die(const char *s) {
   perror("\n");
   perror(s);
   exit(1);
 }
 
-string get_keypress() {
+inline std::string get_keypress() {
   // the real work is being done by read(STDIN_FILENO, &c, 1)
   int nread;
   char c;
   if ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
     if (nread == -1 && errno != EAGAIN)
-      die("Error getting input");
+      GRAPHICS_die("Error getting input");
     else
       return "";
   }
@@ -190,28 +188,28 @@ string get_keypress() {
     }
     return "";
   } else {
-    return string() + c;
+    return std::string() + c;
   }
 }
 
 
 
-struct Color {
+struct GRAPHICS_Color {
   unsigned char r;
   unsigned char g;
   unsigned char b;
 };
 
-int rows;
-int cols;
-std::vector<Color> pixels;
-double delay;
+inline int GRAPHICS_rows;
+inline int GRAPHICS_cols;
+inline std::vector<GRAPHICS_Color> GRAPHICS_pixels;
+inline double GRAPHICS_delay;
 
-void pause(double seconds) {
+inline void pause(double seconds) {
   std::this_thread::sleep_for(std::chrono::duration<double>(seconds));
 }
 
-int max_rows() {
+inline int GRAPHICS_max_rows() {
   struct winsize size;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
   int rows = size.ws_row * 2 - 4; // - 4 for the border + the newline at the end
@@ -219,7 +217,7 @@ int max_rows() {
   return rows;
 }
 
-int max_cols() {
+inline int GRAPHICS_max_cols() {
   struct winsize size;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
   int cols = size.ws_col - 2; // - 2 for the border
@@ -227,92 +225,92 @@ int max_cols() {
   return cols;
 }
 
-void init_graphics(int num_columns, int num_rows, double time_between_draws) {
-  cout << "To stop your program early, press Ctrl-C.\n"
+inline void init_graphics(int num_columns, int num_rows, double time_between_draws) {
+  std::cout << "To stop your program early, press Ctrl-C.\n"
           "If your program crashes and the terminal starts acting weird, run \"tput reset\"\n";
   pause(1);
 
-  cols = num_columns;
-  rows = num_rows;
-  
-  if (cols > max_cols() || rows > max_rows()) {
-    cerr << "Error: The maximum window size is " << max_cols() << " columns by " << max_rows() << " rows.\n";
+  GRAPHICS_cols = num_columns;
+  GRAPHICS_rows = num_rows;
+
+  if (GRAPHICS_cols > GRAPHICS_max_cols() || GRAPHICS_rows > GRAPHICS_max_rows()) {
+    std::cerr << "Error: The maximum window size is " << GRAPHICS_max_cols() << " columns by " << GRAPHICS_max_rows() << " rows.\n";
     exit(1);
   }
 
-  enableRawMode();
+  GRAPHICS_enableRawMode();
 
-  delay = time_between_draws;
+  GRAPHICS_delay = time_between_draws;
 
-  pixels.resize(rows * cols);
+  GRAPHICS_pixels.resize(GRAPHICS_rows * GRAPHICS_cols);
 
   clear_screen();
 }
 
-int get_rows() { return rows; }
-int get_cols() { return cols; }
+inline int get_rows() { return GRAPHICS_rows; }
+inline int get_cols() { return GRAPHICS_cols; }
 
-void setForeground(Color c) {
+inline void GRAPHICS_setForeground(GRAPHICS_Color c) {
   printf("\033[38;2;%d;%d;%dm", c.r, c.g, c.b);
 }
 
-void setBackground(Color c) {
+inline void GRAPHICS_setBackground(GRAPHICS_Color c) {
   printf("\033[48;2;%d;%d;%dm", c.r, c.g, c.b);
 }
 
-void stretch_to_fit_window() {
-  rows = max_rows();
-  cols = max_cols();
+inline void stretch_to_fit_window() {
+  GRAPHICS_rows = GRAPHICS_max_rows();
+  GRAPHICS_cols = GRAPHICS_max_cols();
 
-  pixels.resize(rows * cols);
+  GRAPHICS_pixels.resize(GRAPHICS_rows * GRAPHICS_cols);
 
-  setDefaultBackground(); // if you don't include this there's a weird artifact at the bottom of the screen when you resize
+  GRAPHICS_setDefaultBackground(); // if you don't include this there's a weird artifact at the bottom of the screen when you resize
 
   clear_screen();
 }
 
-void writePixels(Color c1, Color c2, bool shouldDisregardC2) {
-  setForeground(c1);
-  if (shouldDisregardC2) setDefaultBackground();
-  else setBackground(c2);
+inline void GRAPHICS_writePixels(GRAPHICS_Color c1, GRAPHICS_Color c2, bool shouldDisregardC2) {
+  GRAPHICS_setForeground(c1);
+  if (shouldDisregardC2) GRAPHICS_setDefaultBackground();
+  else GRAPHICS_setBackground(c2);
   printf("▀");
 }
 
-Color getPixel(int row, int col) {
-  if (row < 0 || row >= rows || col < 0 || col >= cols)
+inline GRAPHICS_Color GRAPHICS_getPixel(int row, int col) {
+  if (row < 0 || row >= GRAPHICS_rows || col < 0 || col >= GRAPHICS_cols)
     return {152, 152, 152}; // out of bounds is gray
   else
-    return pixels.at(row * cols + col);
+    return GRAPHICS_pixels.at(row * GRAPHICS_cols + col);
 }
 
-bool should_automatically_redraw = true;
+inline bool GRAPHICS_should_automatically_redraw = true;
 
-void toggle_automatic_redrawing() {
-  should_automatically_redraw = !should_automatically_redraw;
+inline void toggle_automatic_redrawing() {
+  GRAPHICS_should_automatically_redraw = !GRAPHICS_should_automatically_redraw;
 }
 
-void draw_screen() {
-  if (delay > 0.0)
-    pause(delay);
+inline void draw_screen() {
+  if (GRAPHICS_delay > 0.0)
+    pause(GRAPHICS_delay);
 
   printf("\033[1;1H");  // go to the (0, 0) (which the terminal considers to be
                         // (1, 1))
 
-  for (int row = -1; row < rows + 1; row += 2) {
-    for (int col = -1; col < cols + 1; col++) {
-      Color above = getPixel(row, col);
-      Color below = getPixel(row + 1, col);
-      writePixels(above, below, row + 1 > rows);
+  for (int row = -1; row < GRAPHICS_rows + 1; row += 2) {
+    for (int col = -1; col < GRAPHICS_cols + 1; col++) {
+      GRAPHICS_Color above = GRAPHICS_getPixel(row, col);
+      GRAPHICS_Color below = GRAPHICS_getPixel(row + 1, col);
+      GRAPHICS_writePixels(above, below, row + 1 > GRAPHICS_rows);
     }
     printf("\n");
   }
 }
 
-void setPixel(int row, int col, Color c) {
-  pixels.at(row * cols + col) = c;
+inline void GRAPHICS_setPixel(int row, int col, GRAPHICS_Color c) {
+  GRAPHICS_pixels.at(row * GRAPHICS_cols + col) = c;
 }
 
-unordered_map<string, Color> nameMap = {
+inline std::unordered_map<std::string, GRAPHICS_Color> GRAPHICS_nameMap = {
   {"white", {255, 255, 255}},
   {"black", {0, 0, 0}},
   {"red", {255, 0, 0}},
@@ -324,39 +322,39 @@ unordered_map<string, Color> nameMap = {
 };
 
 
-bool validHex(const string& s) {
-  return all_of(s.begin(), s.end(), [](char c){return isxdigit(c);});
+inline bool GRAPHICS_validHex(const std::string& s) {
+  return std::all_of(s.begin(), s.end(), [](char c){return isxdigit(c);});
 }
 
-Color hexToColor(const string& color) {
+inline GRAPHICS_Color GRAPHICS_hexToColor(const std::string& color) {
   unsigned char r = stoi(color.substr(1, 2), nullptr, 16);
   unsigned char g = stoi(color.substr(3, 2), nullptr, 16);
   unsigned char b = stoi(color.substr(5, 2), nullptr, 16);
   return {r, g, b};
 }
 
-Color stringToColor(const string& color) {
-  if (nameMap.count(color) != 0) return nameMap.at(color);
-  else if (color.at(0) == '#' && color.size() == 7 && validHex(color.substr(1))) return hexToColor(color); 
+inline GRAPHICS_Color GRAPHICS_stringToColor(const std::string& color) {
+  if (GRAPHICS_nameMap.count(color) != 0) return GRAPHICS_nameMap.at(color);
+  else if (color.at(0) == '#' && color.size() == 7 && GRAPHICS_validHex(color.substr(1))) return GRAPHICS_hexToColor(color);
   else {
-    cerr << "\nUnknown color: " << color << endl;
+    std::cerr << "\nUnknown color: " << color << std::endl;
     exit(1);
   }
 }
 
-void set_pixel(int row, int col, const string& color) {
-  Color c = stringToColor(color);
+inline void set_pixel(int row, int col, const std::string& color) {
+  GRAPHICS_Color c = GRAPHICS_stringToColor(color);
 
-  setPixel(row, col, c);
+  GRAPHICS_setPixel(row, col, c);
 
-  if (should_automatically_redraw)
+  if (GRAPHICS_should_automatically_redraw)
     draw_screen();
 }
 
-void clear_screen() {
+inline void clear_screen() {
   printf("\033[2J"); // clears all screen contents
-  Color white = {255, 255, 255};
-  std::fill(pixels.begin(), pixels.end(), white);
+  GRAPHICS_Color white = {255, 255, 255};
+  std::fill(GRAPHICS_pixels.begin(), GRAPHICS_pixels.end(), white);
   draw_screen();
 }
 
