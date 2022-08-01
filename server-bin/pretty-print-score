@@ -36,5 +36,13 @@ for part in score['parts']:
     if len(part['comments']) > 0:
         print('\n'.join(map(lambda x: '  ' + x, part['comments'].split('\n'))))
     else:
-        print('  <No output>')
+        print("""\
+ _____________
+< Looks good! >
+ -------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||""")
     print()
