@@ -27,6 +27,8 @@ passwd test_08675309;
 ** Disallow root login via ssh after you're sure you can login as someone else
 
 sudo vim /etc/ssh/sshd_config
+PermitRootLogin no
+sudo service sshd restart
 
 * Update the system
 
@@ -37,7 +39,7 @@ apt upgrade;
 
 apt install build-essential make gcc g++ gdb clang clang-format vim \
 python3 git default-jdk docker.io quota zip unzip valgrind sshpass  \
-ripgrep inotify-tools fail2ban sl zsh cowsay lolcat;
+ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf;
 apt autoremove;
 apt clean;
 apt autoclean;
@@ -113,8 +115,9 @@ chown -R test_08675309:student ~test_08675309;
 
 * Configure quotas
 
-# https://www.tecmint.com/set-filesystem-disk-quotas-on-ubuntu/
-# https://www.digitalocean.com/community/tutorials/how-to-enable-user-and-group-quotas
+you may need to follow these directions to get the right kernel
+modules installed:
+https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-20-04
 
 ** Edit /etc/fstab
 
@@ -270,9 +273,58 @@ User=autograder
 WantedBy=multi-user.target
 #+end_src
 
-** Add ssh authorized key to lawt@www.lawtonsclass.com
+** Add ssh keys and authorized key to lawt@www.lawtonsclass.com
 
-see class-website-vps.org
+see class-website-v2.org
+
+** Add every assignment to available-assignments
+
+(get rid of spaces)
+
+lab00@csci40
+lab01@csci40
+lab02@csci40
+lab03@csci40
+lab04@csci40
+lab05@csci40
+lab06@csci40
+lab07@csci40
+lab08@csci40
+lab09@csci40
+lab10@csci40
+lab11@csci40
+
+lab00@csci41
+lab01@csci41
+lab02@csci41
+lab03@csci41
+lab04@csci41
+lab05@csci41
+lab06@csci41
+lab07@csci41
+lab08@csci41
+lab09@csci41
+lab10@csci41
+
+lab00@csci45
+lab01@csci45
+lab02@csci45
+lab03@csci45
+lab04@csci45
+lab05@csci45
+lab06@csci45
+lab07@csci45
+lab08@csci45
+lab09@csci45
+lab10@csci45
+
+lab00@csci26
+lab01@csci26
+lab02@csci26
+lab03@csci26
+lab04@csci26
+lab05@csci26
+lab06@csci26
 
 ** configure the autograder
 
