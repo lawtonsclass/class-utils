@@ -17,3 +17,6 @@ echo -e "$1\n$1" | passwd $1
 passwd --expire $1
 
 setquota -u $1 100M 110M 0 0 /
+
+# set home folder permissions
+chmod -R go-rwx "/home/$1"
