@@ -34,6 +34,5 @@ echo "" > /home/"$user"/.autograder/log
 chown "$user":student /home/"$user"/.autograder/log
 chmod 400 /home/"$user"/.autograder/log
 
-echo -e "\nWaiting for the autograder to become available."
-echo -e "(Press Ctrl-C to close this submission window at any time--\n  your submission will still be graded.)"
-sudo -u $user bash -c 'tail -f ~/.autograder/log' 
+echo -e "\nWaiting for the autograder to become available." > /home/"$user"/.autograder/log
+echo -e "(Press Ctrl-C to close this submission window at any time--\n  your submission will still be graded.)" > /home/"$user"/.autograder/log
