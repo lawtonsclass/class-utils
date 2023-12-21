@@ -19,7 +19,7 @@ while read -r date time dir file; do
   # echo "$date ${time}: $changed_abs"
   # submission=$changed_abs
 
-  count = $(find ~autograder/submissions-to-grade -name "*.zip" | wc -l)
+  count=$(find ~autograder/submissions-to-grade -name "*.zip" | wc -l)
   while [[ "$count" -gt 0 ]]; do
     for f in ~autograder/submissions-to-grade/*.zip; do
       submission=$f
@@ -28,7 +28,7 @@ while read -r date time dir file; do
       mv $submission ~autograder/submissions-graded
     done
 
-    count = $(find ~autograder/submissions-to-grade -name "*.zip" | wc -l)
+    count=$(find ~autograder/submissions-to-grade -name "*.zip" | wc -l)
   done
 
 
