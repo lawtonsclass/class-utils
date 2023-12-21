@@ -13,14 +13,23 @@ inotifywait -mr \
   --timefmt '%m/%d/%y %H:%M' --format '%T %w %f' \
   -e moved_to ~autograder/submissions-to-grade |
 while read -r date time dir file; do
-       changed_abs=${dir}${file}
-       changed_rel=${changed_abs#"$cwd"/}
+  # changed_abs=${dir}${file}
+  # changed_rel=${changed_abs#"$cwd"/}
 
-       echo "$date ${time}: $changed_abs"
-       submission=$changed_abs
+  # echo "$date ${time}: $changed_abs"
+  # submission=$changed_abs
 
-       # grade the submission
-       /home/autograder/bin/autograde-one-submission $submission 2>&1 | tee ~autograder/last-run.log
+  count = $(find ~autograder/submissions-to-grade -name "*.zip" | wc -l)
+  while [[ "$count" -gt 0 ]]; do
+    for f in ~autograder/submissions-to-grade/*.zip; do
+      submission=$f
+      # grade the submission
+      /home/autograder/bin/autograde-one-submission $submission 2>&1 | tee ~autograder/last-run.log
+      mv $submission ~autograder/submissions-graded
+    done
 
-       mv $submission ~autograder/submissions-graded
+    count = $(find ~autograder/submissions-to-grade -name "*.zip" | wc -l)
+  done
+
+
 done
