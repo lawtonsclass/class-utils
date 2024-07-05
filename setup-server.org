@@ -83,6 +83,37 @@ export TERM=xterm-256color
 
 get rid of the absolute paths on void linux
 
+* SSH Banner
+
+#+begin_src bash
+sudo vim /etc/ssh/sshd_banner
+#+end_src
+
+Add the following text:
+#+begin_src
+ _____ _              ____ _                  ____
+|_   _| |__   ___    / ___| | __ _ ___ ___   / ___|  ___ _ ____   _____ _ __
+  | | | '_ \ / _ \  | |   | |/ _` / __/ __|  \___ \ / _ \ '__\ \ / / _ \ '__|
+  | | | | | |  __/  | |___| | (_| \__ \__ \   ___) |  __/ |   \ V /  __/ |
+  |_| |_| |_|\___|   \____|_|\__,_|___/___/  |____/ \___|_|    \_/ \___|_|
+
+Your username is (last name) + _ + (student ID).
+Example: nichols_08675309.
+
+*YOU WON'T SEE ANY STARS* as you type your password--it's still
+getting your input. Just type your password and press Enter.
+#+end_src
+
+#+begin_src bash
+sudo vim /etc/ssh/sshd_config
+#+end_src
+
+Banner /etc/ssh/sshd_banner
+
+#+begin_src bash
+sudo systemctl restart sshd
+#+end_src
+
 ** do the same in zsh
 
 sudo vim /etc/zsh/zprofile, and add:
