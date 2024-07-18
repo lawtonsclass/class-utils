@@ -28,7 +28,7 @@ passwd test_08675309;
 
 sudo vim /etc/ssh/sshd_config
 PermitRootLogin no
-sudo service sshd restart
+sudo service ssh restart
 
 * Update the system
 
@@ -38,8 +38,8 @@ apt upgrade;
 * Install required packages
 
 apt install build-essential make gcc g++ gdb clang clang-format vim \
-python3 git default-jdk docker.io quota zip unzip valgrind sshpass  \
-ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf;
+python3 python3-pip git default-jdk docker.io quota zip unzip valgrind \
+sshpass ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf;
 apt autoremove;
 apt clean;
 apt autoclean;
@@ -49,9 +49,14 @@ systemctl enable --now docker;
 
 ** neovim ppa
 
-add-apt-repository ppa:neovim-ppa/stable;
-apt update;
-apt install neovim;
+sudo apt install snapd
+sudo snap install --stable nvim --classic
+
+you'll have to test that this actually works:
+sudo su
+cd ~
+umask 022
+python3 -m pip install --upgrade pynvim --break-system-packages
 
 ** install oh my zsh for lawt
 
@@ -65,8 +70,11 @@ under the [DEFAULT section, add]:
 ignoreip = ... 209.129.240.0/22
 
 sudo service fail2ban restart
+sudo systemctl daemon-reload
 
 * Add files to /etc/profile.d
+
+(edit as root with sudo)
 
 ** umask.sh
 
@@ -80,8 +88,6 @@ umask 077
 export TERM=xterm-256color
 /usr/games/cowsay Welcome to the class server! | /usr/games/lolcat
 #+end_src
-
-get rid of the absolute paths on void linux
 
 * SSH Banner
 
@@ -102,6 +108,7 @@ Example: nichols_08675309.
 
 *YOU WON'T SEE ANY STARS* as you type your password--it's still
 getting your input. Just type your password and press Enter.
+
 #+end_src
 
 #+begin_src bash
@@ -111,7 +118,7 @@ sudo vim /etc/ssh/sshd_config
 Banner /etc/ssh/sshd_banner
 
 #+begin_src bash
-sudo systemctl restart sshd
+sudo systemctl restart ssh
 #+end_src
 
 ** do the same in zsh
@@ -121,8 +128,6 @@ sudo vim /etc/zsh/zprofile, and add:
 . /etc/profile.d/welcome.sh
 . /etc/profile.d/umask.sh
 #+end_src
-
-^ this isn't necessary on void linux
 
 log out and log back in so that the umask takes effect
 
@@ -148,16 +153,11 @@ chown -R test_08675309:student ~test_08675309;
 
 you may need to follow these directions to get the right kernel
 modules installed:
-https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-20-04
 
 ** Edit /etc/fstab
 
-Add ",usrquota" to the options
-
-mount -o remount /
-quotacheck -cum /
-  ^ this one might take a while; just wait
-quotaon /
+follow these directions:
+https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-20-04
 
 ** (oracle cloud) if this doesn't work, you need the generic kernel
 
@@ -306,7 +306,7 @@ WantedBy=multi-user.target
 
 ** Add ssh keys and authorized key to lawt@www.lawtonsclass.com
 
-see class-website-v2.org
+see class-website-v3.org
 
 ** Add every assignment to available-assignments
 
@@ -358,6 +358,8 @@ lab05@csci26
 lab06@csci26
 
 ** configure the autograder
+
+Make sure lawt@www.lawtonsclass.com *is running bash* as the default shell
 
 Run it manually first, so that you can make sure it's connecting
 properly. You might need to type "yes", etc.
