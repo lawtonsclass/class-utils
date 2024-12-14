@@ -39,7 +39,7 @@ apt upgrade;
 
 apt install build-essential make gcc g++ gdb clang clang-format vim \
 python3 python3-pip git default-jdk docker.io quota zip unzip valgrind \
-sshpass ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf;
+sshpass ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf ncdu;
 apt autoremove;
 apt clean;
 apt autoclean;
