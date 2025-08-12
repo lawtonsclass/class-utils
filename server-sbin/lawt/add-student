@@ -5,6 +5,12 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
+# Check if $1 is empty
+if [[ -z "$1" ]]; then
+  echo "Error: The first argument ($1) cannot be empty."
+  exit 1 # Exit with an error code
+fi
+
 # usage: add-student username
 # todo: add full name
 
