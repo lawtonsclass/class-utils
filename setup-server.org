@@ -72,6 +72,10 @@ ignoreip = ... 209.129.240.0/22
 sudo service fail2ban restart
 sudo systemctl daemon-reload
 
+* Make /home not visible to other users
+
+sudo chmod 751 /home
+
 * Add files to /etc/profile.d
 
 (edit as root with sudo)
