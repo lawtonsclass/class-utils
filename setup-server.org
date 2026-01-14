@@ -67,7 +67,7 @@ add the .zshrc from virtual-machine.org
 sudo vim /etc/fail2ban/jail.conf
 
 under the [DEFAULT section, add]:
-ignoreip = ... 209.129.240.0/22
+ignoreip = ... 209.129.240.0/22 205.155.0.0/16
 
 sudo service fail2ban restart
 sudo systemctl daemon-reload
