@@ -20,9 +20,22 @@ useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK
 
 passwd lawt;
 passwd autograder;
+
+* (Optional) Make a swap file
+
+sudo fallocate -l 2G /swapfile;
+sudo chmod 600 /swapfile;
+sudo mkswap /swapfile;
+sudo swapon /swapfile;
+
+(when you're done, you can do:)
+sudo swapoff /swapfile;
+sudo rm /swapfile;
 passwd test_08675309;
 
 ** Add public key to ~/.ssh/authorized_keys for lawt and autograder
+
+Looks like you have to add your private key to root now for refresh-class-utils to work?
 
 ** Disallow root login via ssh after you're sure you can login as someone else
 
@@ -162,6 +175,8 @@ modules installed:
 
 follow these directions:
 https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-20-04
+if this ever stops working, or if you want to use ext4 quotas without quota files:
+https://askubuntu.com/a/1492149
 
 ** (oracle cloud) if this doesn't work, you need the generic kernel
 
@@ -231,6 +246,14 @@ apt update
 apt install build-essential gcc g++ git vim python3 valgrind tzdata
 apt clean
 if you didn't get a prompt, use: ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+install DATA 8 venv:
+apt install python3-venv
+python3 -m venv ~/data-8-assignments-venv
+source ~/data-8-assignments-venv/bin/activate
+pip install otter-grader==6.1.3
+pip install datascience==0.17.6
+pip install ipykernel==6.30.0
 
 *** If apt update doesn't work on raspberry pi
 
@@ -388,6 +411,23 @@ git config --global alias.co checkout;
 git config --global alias.br branch;
 git config --global alias.st status;
 git config --global alias.c commit;
+
+* Install DATA 8 submission (data_8_submit on github)
+
+clone into autograder's home folder
+
+sudo apt install nodejs npm
+npm install
+
+install it:
+https://caddyserver.com/docs/install#debian-ubuntu-raspbian
+
+in a tmux split pane window:
+node app.js
+sudo caddy reverse-proxy --from server.lawtonsclass.com --to localhost:3000
+
+if caddy says port 80 is in use:
+sudo caddy stop
 
 * Bash script snippets
 
