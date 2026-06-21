@@ -15,6 +15,7 @@ chown -R lawt:teacher ~lawt/class-utils
 # put the proper default permissions on everything
 chmod -R 700 server-sbin
 chmod -R 755 server-bin
+ls -l server-bin
 chown -R lawt:teacher server-sbin/lawt/*
 chown -R autograder:bot server-sbin/autograder/*
 
