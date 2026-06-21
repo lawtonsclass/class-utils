@@ -56,32 +56,92 @@ echo $user_home_folder
 
 echo "Submission grading started." >> "$user_home_folder"/.autograder/log
 
-# create a new docker container called "autograder_ephemeral"
-docker container create -t --name autograder_ephemeral autograder_template
-docker start autograder_ephemeral
-docker update --cpus="1.0" autograder_ephemeral
+# BEGIN OLD DOCKER STUFF
+# # create a new docker container called "autograder_ephemeral"
+# docker container create -t --name autograder_ephemeral autograder_template
+# docker start autograder_ephemeral
+# docker update --cpus="1.0" autograder_ephemeral
+# 
+# # copy the correct autograder into the docker container
+# docker cp ~autograder/autograders/$class/$assignment autograder_ephemeral:/root
+# 
+# # now the file exists in the /root/$assignment folder
+# 
+# # copy the autograder library into the docker container (unnecessary)
+# # docker cp ~autograder/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
+# 
+# # copy the code extracted into ~/.autogradertmp into the docker container
+# docker cp ~autograder/.autogradertmp autograder_ephemeral:/root/$assignment
+# docker exec autograder_ephemeral mv /root/$assignment/.autogradertmp /root/$assignment/submission
+# 
+# # run the autograder inside the docker container
+# docker exec autograder_ephemeral python3 /root/$assignment/autograder.py $class $assignment $user $submission_date
+# 
+# # extract the results.json file from the docker container into a file called $resultfilename
+# docker cp autograder_ephemeral:/root/$assignment/$resultfilename ~autograder
+# 
+# # delete the docker container
+# docker stop autograder_ephemeral
+# docker rm --force autograder_ephemeral
+# END OLD DOCKER STUFF
 
-# copy the correct autograder into the docker container
-docker cp ~autograder/autograders/$class/$assignment autograder_ephemeral:/root
+# BEGIN BUBBLEWRAP
+tmp_output_folder=~autograder/.autogradertmp/.output
+rm -rf $tmp_output_folder
+mkdir -p $tmp_output_folder
 
-# now the file exists in the /root/$assignment folder
+# if you move back to intel, you may have to share lib32 & lib64
 
-# copy the autograder library into the docker container (unnecessary)
-# docker cp ~autograder/bin/autograderlib.py autograder_ephemeral:~/$class/$assignment
+systemd-run --user --pty --wait \
+  --property=MemoryMax=512M \
+  --property=TasksMax=64 \
+  --property=AllowedCPUs=0 \
+\
+bwrap \
+  --unshare-all \
+  --die-with-parent \
+  \
+  --size 33554432 `#32 MB` \
+  --tmpfs / \
+  --size 104857600 `#100 MB` \
+  --tmpfs /work \
+  --ro-bind ~autograder/autograders/"$class/$assignment" /autograder \
+  --ro-bind ~autograder/autograders/lib /autograderlib \
+  --ro-bind ~autograder/.autogradertmp /submission \
+  --ro-bind ~autograder/data-8-assignments-venv /home/autograder/data-8-assignments-venv \
+  --bind "$tmp_output_folder" /output \
+  \
+  --ro-bind /usr /usr \
+  --ro-bind /lib /lib \
+  --ro-bind /bin /bin \
+  --ro-bind /etc /etc \
+  --size 33554432 `#32 MB` \
+  --tmpfs /tmp \
+  --size 33554432 `#32 MB` \
+  --tmpfs /run \
+  \
+  --proc /proc \
+  --dev /dev \
+  --size 33554432 `#32 MB` \
+  --tmpfs /dev/shm \
+  --chmod 1777 /dev/shm \
+  \
+  --chdir /work \
+  \
+  --setenv HOME /home/autograder \
+  --setenv TMPDIR /tmp \
+  \
+  -- \
+  /usr/bin/env bash -c "
+    cp -r /autograder/* .
+    cp -r /autograderlib/* .
+    cp -r /submission ./submission
+    python3 autograder.py $class $assignment $user $submission_date
+    cp $resultfilename /output
+  "
 
-# copy the code extracted into ~/.autogradertmp into the docker container
-docker cp ~autograder/.autogradertmp autograder_ephemeral:/root/$assignment
-docker exec autograder_ephemeral mv /root/$assignment/.autogradertmp /root/$assignment/submission
-
-# run the autograder inside the docker container
-docker exec autograder_ephemeral python3 /root/$assignment/autograder.py $class $assignment $user $submission_date
-
-# extract the results.json file from the docker container into a file called $resultfilename
-docker cp autograder_ephemeral:/root/$assignment/$resultfilename ~autograder
-
-# delete the docker container
-docker stop autograder_ephemeral
-docker rm --force autograder_ephemeral
+mv "$tmp_output_folder/$resultfilename" ~autograder
+# END BUBBLEWRAP
 
 # move the results file into the user's home directory, and give them read access
 /home/autograder/bin/make-autograder-folder-for-user $user
