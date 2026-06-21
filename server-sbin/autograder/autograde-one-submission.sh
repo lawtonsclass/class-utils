@@ -89,8 +89,11 @@ echo "Submission grading started." >> "$user_home_folder"/.autograder/log
 tmp_output_folder=~autograder/.autogradertmp/.output
 rm -rf $tmp_output_folder
 mkdir -p $tmp_output_folder
+chown -R autograder:bot ~autograder/.autogradertmp
 
 # if you move back to intel, you may have to share lib32 & lib64
+
+loginctl enable-linger autograder
 
 systemd-run --user --pty --wait \
   --property=MemoryMax=512M \
