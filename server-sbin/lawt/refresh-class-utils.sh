@@ -21,9 +21,11 @@ chown -R autograder:bot server-sbin/autograder/*
 # put special permissions on /usr/local/bin files
 gcc server-bin/refresh-starter-code.c -o server-bin/refresh-starter-code
 chown root server-bin/refresh-starter-code
+chmod 755 server-bin/refresh-starter-code
 
 gcc server-bin/finish-turnin.c -o server-bin/finish-turnin
 chown root server-bin/finish-turnin
+chmod 755 server-bin/finish-turnin
 
 # put all the files in their proper places
 # cp -p is necessary to preserve mode bits
