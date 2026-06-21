@@ -50,8 +50,7 @@ apt upgrade;
 
 * Install required packages
 
-apt install build-essential make gcc g++ gdb clang clang-format vim \
-python3 python3-pip git default-jdk docker.io quota zip unzip valgrind \
+apt install build-essential make gcc g++ gdb clang clang-format vim \ python3 python3-pip python3-venv git default-jdk docker.io quota zip unzip valgrind \
 sshpass ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf ncdu;
 apt autoremove;
 apt clean;
@@ -71,6 +70,14 @@ cd ~
 umask 022
 python3 -m pip install --upgrade pynvim --break-system-packages
 
+** DATA 8 python venv
+
+~autograder:
+python3 -m venv data-8-assignments-venv
+data-8-assignments-venv/bin/pip install otter-grader==6.1.3
+data-8-assignments-venv/bin/pip install datascience==0.17.6
+data-8-assignments-venv/bin/pip install ipykernel==6.30.0
+
 ** install oh my zsh for lawt
 
 add the .zshrc from virtual-machine.org
@@ -87,7 +94,9 @@ sudo systemctl daemon-reload
 
 * Make /home not visible to other users
 
+(don't actually do this--it breaks nvim)
 sudo chmod 751 /home
+(usually it's 755)
 
 * Add files to /etc/profile.d
 
@@ -140,7 +149,8 @@ sudo systemctl restart ssh
 
 ** do the same in zsh
 
-sudo vim /etc/zsh/zprofile, and add:
+sudo vim /etc/zsh/zprofile
+add:
 #+begin_src bash
 . /etc/profile.d/welcome.sh
 . /etc/profile.d/umask.sh
@@ -159,6 +169,7 @@ sudo chmod -R 755 /etc/skel/.config;
 
 sudo -s
 cd /etc/skel
+
 cp -r .vimrc .config ~lawt;
 cp -r .vimrc .config ~autograder;
 cp -r .vimrc .config ~test_08675309;
@@ -175,7 +186,7 @@ modules installed:
 
 follow these directions:
 https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-20-04
-if this ever stops working, or if you want to use ext4 quotas without quota files:
+if this ever stops working, or if you want to use ext4 quotas without quota files (but you have to use a recovery console because the drive needs to be unmapped):
 https://askubuntu.com/a/1492149
 
 ** (oracle cloud) if this doesn't work, you need the generic kernel
@@ -231,7 +242,7 @@ echo "*/10 * * * * flock -n /var/lock/autograder.lock /home/autograder/bin/autog
 
 clone it in ~lawt, and then move it to / with sudo
 
-* Set up docker
+* Set up docker (no longer necessary)
 
 ** Create autograder_working as a template
 
@@ -400,6 +411,24 @@ sudo journalctl --unit=autograder
 
 just move them to themselves:
 mv submission.zip submission.zip
+
+* Things to run in tmux on the servers
+
+** autograder@server:~/data_8_submit
+
+(just initially)
+sudo service caddy stop
+
+node app.js
+sudo caddy reverse-proxy --from server.lawtonsclass.com --to localhost:3000
+
+** lawt@www:~/class_website
+
+(just initially)
+sudo service caddy stop
+
+CLASS_WEBSITE_LOG=info ./target/release/class_website_v3
+sudo caddy reverse-proxy --from www.lawtonsclass.com --to :8000
 
 * Git aliases
 
