@@ -5,8 +5,6 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
-umask 000
-
 cd ~lawt/class-utils
 git checkout -- .
 git clean -f
@@ -28,11 +26,12 @@ gcc server-bin/finish-turnin.c -o server-bin/finish-turnin
 chown root server-bin/finish-turnin
 
 # put all the files in their proper places
-cp server-bin/* /usr/local/bin
+# cp -p is necessary to preserve mode bits
+cp -p server-bin/* /usr/local/bin
 mkdir -p ~lawt/bin
 mkdir -p ~autograder/bin
-cp server-sbin/autograder/* ~autograder/bin
-cp server-sbin/lawt/* ~lawt/bin
+cp -p server-sbin/autograder/* ~autograder/bin
+cp -p server-sbin/lawt/* ~lawt/bin
 chown -R autograder:bot ~autograder/bin
 chown -R lawt:teacher ~lawt/bin
 chmod -R 700 ~autograder/bin ~lawt/bin
@@ -68,7 +67,7 @@ chmod u+s ~lawt/bin/add-student
 rm -f /usr/local/bin/*.c ~lawt/bin/*.c ~autograder/bin/*.c
 
 # include the graphics library
-cp include/graphics /usr/local/include
+cp -p include/graphics /usr/local/include
 chown root:teacher /usr/local/include/graphics
 chmod 664 /usr/local/include/graphics
 
