@@ -15,7 +15,6 @@ chown -R lawt:teacher ~lawt/class-utils
 # put the proper default permissions on everything
 chmod -R 700 server-sbin
 chmod -R 755 server-bin
-ls -l server-bin
 chown -R lawt:teacher server-sbin/lawt/*
 chown -R autograder:bot server-sbin/autograder/*
 
@@ -27,6 +26,7 @@ gcc server-bin/finish-turnin.c -o server-bin/finish-turnin
 chown root server-bin/finish-turnin
 
 # put all the files in their proper places
+ls -l server-bin
 cp server-bin/* /usr/local/bin
 mkdir -p ~lawt/bin
 mkdir -p ~autograder/bin
