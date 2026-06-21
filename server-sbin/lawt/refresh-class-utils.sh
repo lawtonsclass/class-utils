@@ -5,6 +5,8 @@ if [[ $UID != 0 ]]; then
     exit 1
 fi
 
+umask 000
+
 cd ~lawt/class-utils
 git checkout -- .
 git clean -f
@@ -26,7 +28,6 @@ gcc server-bin/finish-turnin.c -o server-bin/finish-turnin
 chown root server-bin/finish-turnin
 
 # put all the files in their proper places
-ls -l server-bin
 cp server-bin/* /usr/local/bin
 mkdir -p ~lawt/bin
 mkdir -p ~autograder/bin
