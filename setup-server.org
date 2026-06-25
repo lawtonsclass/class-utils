@@ -9,13 +9,11 @@ getent group teacher || groupadd teacher;
 getent group bot || groupadd bot;
 getent group student || groupadd student;
 
-getent group docker || groupadd docker;
-
 * Add initial users
 
 # add users {lawt, autograder, test_08675309}
 useradd -m -N -g teacher -G sudo -s /bin/bash -c "Lawton Nichols" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 lawt;
-useradd -m -N -g bot -G sudo,docker -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder;
+useradd -m -N -g bot -G sudo -s /bin/bash -c "Autograder" -K UID_MIN=1000 -K UID_MAX=1999 -K UMASK=077 autograder;
 useradd -m -N -g student -s /bin/bash -c "Test Student" -K UID_MIN=2000 -K UMASK=077 test_08675309;
 
 passwd lawt;
@@ -50,14 +48,11 @@ apt upgrade;
 
 * Install required packages
 
-apt install build-essential make gcc g++ gdb clang clang-format vim \ python3 python3-pip python3-venv git default-jdk docker.io quota zip unzip valgrind \
-sshpass ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf ncdu;
+apt install build-essential make gcc g++ gdb clang clang-format vim \ python3 python3-pip python3-venv git default-jdk quota zip unzip valgrind \ sshpass ripgrep inotify-tools fail2ban sl zsh cowsay lolcat emacs fzf ncdu;
 apt autoremove;
 apt clean;
 apt autoclean;
 apt autopurge;
-
-systemctl enable --now docker;
 
 ** neovim ppa
 
@@ -77,6 +72,7 @@ python3 -m venv data-8-assignments-venv
 data-8-assignments-venv/bin/pip install otter-grader==6.1.3
 data-8-assignments-venv/bin/pip install datascience==0.17.6
 data-8-assignments-venv/bin/pip install ipykernel==6.30.0
+data-8-assignments-venv/bin/pip install setuptools<82.0.0
 
 ** install oh my zsh for lawt
 
@@ -265,6 +261,7 @@ source ~/data-8-assignments-venv/bin/activate
 pip install otter-grader==6.1.3
 pip install datascience==0.17.6
 pip install ipykernel==6.30.0
+pip install setuptools<82.0.0
 
 *** If apt update doesn't work on raspberry pi
 
@@ -412,24 +409,6 @@ sudo journalctl --unit=autograder
 just move them to themselves:
 mv submission.zip submission.zip
 
-* Things to run in tmux on the servers
-
-** autograder@server:~/data_8_submit
-
-(just initially)
-sudo service caddy stop
-
-node app.js
-sudo caddy reverse-proxy --from server.lawtonsclass.com --to localhost:3000
-
-** lawt@www:~/class_website
-
-(just initially)
-sudo service caddy stop
-
-CLASS_WEBSITE_LOG=info ./target/release/class_website_v3
-sudo caddy reverse-proxy --from www.lawtonsclass.com --to :8000
-
 * Git aliases
 
 git config --global user.email "lawtonnichols@gmail.com";
@@ -457,6 +436,24 @@ sudo caddy reverse-proxy --from server.lawtonsclass.com --to localhost:3000
 
 if caddy says port 80 is in use:
 sudo caddy stop
+
+* Things to run in tmux on the servers
+
+** autograder@server:~/data_8_submit
+
+(just initially)
+sudo service caddy stop
+
+node app.js
+sudo caddy reverse-proxy --from server.lawtonsclass.com --to localhost:3000
+
+** lawt@www:~/class_website
+
+(just initially)
+sudo service caddy stop
+
+CLASS_WEBSITE_LOG=info ./target/release/class_website_v3
+sudo caddy reverse-proxy --from www.lawtonsclass.com --to :8000
 
 * Bash script snippets
 
