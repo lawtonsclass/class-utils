@@ -96,7 +96,7 @@ chown -R autograder:bot ~autograder/.autogradertmp
 loginctl enable-linger autograder
 
 systemd-run --uid=autograder --pty --wait \
-  --property=MemoryMax=1500M \
+  --property=MemoryMax=2000M \
   --property=TasksMax=64 \
   --property=AllowedCPUs=0 \
 \
